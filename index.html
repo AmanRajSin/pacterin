@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Index</title>
+        <script src="./configs/jQuery.js"></script>
+        <script>
+            jQuery.ajax({
+				url: "configs/font-awesome",
+				data:'',
+				type: "POST",
+				success:function(data) {
+                    $('head').append(data);
+				},
+				error:function () {
+					alert('There was some problem in loading the Font-Awesome Style sheet. Some icons may not be visible.');
+				}
+			});
+        </script>
+    </head>
+    <body>
+        
+    </body>
+</html>
