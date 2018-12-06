@@ -23,5 +23,5 @@ app.get('/login', function(req, res) { res.render('./login');});
 app.get('/signup', function(req, res) { res.render('./signup');});
 
 // Listen to Port
-app.listen(8080);
-console.log('Port 8080 Up!');
+app.listen(process.env.PORT||80);
+console.log('Port 80 Up!');
