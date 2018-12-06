@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Sign-In</title>
+        <% include partial/cdn-includes.ejs %>
+    </head>
+    <body>
+        <form id='login' action='/login-submit' method='post' accept-charset='UTF-8'>
+            <fieldset >
+                <label for='username' >UserName*:</label>
+                <input type='text' name='username' id='username'  maxlength="25" />
+                <br>
+                <label for='password' >Password*:</label>
+                <input type='password' name='password' id='password' maxlength="20" />
+                <br>
+                <input type='submit' name='Submit' value='Submit' />
+            </fieldset>
+        </form>
+    </body>
+</html>

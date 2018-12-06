@@ -1,0 +1,42 @@
+<!DOCTYPE HTML>
+<html>
+    <head>
+		<title>Sign-Up</title>
+ 	    <% include partial/cdn-includes.ejs %>
+	    <script>
+		    function checkAvailability() {
+			    $("#loaderIcon").show();
+			    jQuery.ajax({
+				    url: "/username-availability-check",
+				    data:'username='+$("#username").val(),
+				    type: "POST",
+				    success:function(data) {
+					    $("#user-availability-status").html(data);
+					    $("#loaderIcon").hide();
+				    },
+				    error:function () {
+					
+				    }
+			    });
+		    }
+	    </script>
+    </head>
+    <body>
+	    <form id='signup' action='/signup-submit' method='post' accept-charset='UTF-8'>
+		    <fieldset >
+			    <label for='username' >UserName*:</label>
+			    <input type='text' name='username' id='username' onBlur="checkAvailability()" maxlength="25" />
+			    <i id="loaderIcon" class="fa fa-spinner fa-spin" style="font-size:12px; display:none;"></i>
+			    <span id="user-availability-status"></span>
+			    <br>
+			    <label for='password' >Password*:</label>
+			    <input type='password' name='password' id='password' maxlength="20" />
+			    <br>
+			    <label for='email' >E-Mail*:</label>
+			    <input type='email' name='email' id='email' maxlength="35" />
+			    <br>
+			    <input type='submit' name='Submit' value='Submit' />
+		    </fieldset>
+	    </form>
+    </body>
+</html>
