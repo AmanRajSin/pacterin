@@ -21,14 +21,10 @@ var sessionStore = new MYSQLSessionStore({
     }
 }, conn);
 
-var sessionInfo = {
+module.exports = {
     secret : 'some shitty string',
     store : sessionStore,
     resave : false,
     saveUninitialized: false,
     cookie : {}
-}
-
-module.exports = function(app) {
-    app.use(session(sessionInfo));
 }
