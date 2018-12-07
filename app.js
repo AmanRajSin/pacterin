@@ -7,12 +7,12 @@ var sessionControl = require('./controllers/sessionControl')
 
 var app = express();
 app.set('view engine', 'ejs');
+app.use(session(sessionControl));
 
 // Fire Controllers
 loginControl(app);
 signupControl(app);
 usernameAvailability(app);
-sessionControl(app);
 
 // Static files
 app.use(express.static('./public'));
