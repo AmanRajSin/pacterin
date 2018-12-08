@@ -6,10 +6,10 @@ var usernameAvailability = require('./controllers/usernameAvailabilityCheck')
 var sessionControl = require('./controllers/sessionControl')
 var videoStream = require('./controllers/videoStream')
 var profileControl = require('./controllers/profileControl')
-var crededit = require('./controllers/crededit')
-var credchange = require('./controllers/credchange')
-var profedit = require('./controllers/profedit')
-var profchange = require('./controllers/profchange')
+var credEdit = require('./controllers/credEdit')
+var credChange = require('./controllers/credChange')
+var profEdit = require('./controllers/profEdit')
+var profChange = require('./controllers/profChange')
 
 var app = express();
 app.set('view engine', 'ejs');
@@ -21,10 +21,10 @@ signupControl(app);
 usernameAvailability(app);
 videoStream(app);
 profileControl(app);
-crededit(app);
-credchange(app);
-profedit(app);
-profchange(app);
+credEdit(app);
+credChange(app);
+profEdit(app);
+profChange(app);
 
 // Static files
 app.use(express.static('./public'));
