@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Sign-In</title>
+        <% include partial/cdn-includes.ejs %>
+    </head>
+    <body>
+        <form id='edit' action='/cred-edit-submit' method='post' accept-charset='UTF-8'>
+            <fieldset >
+                <label for='email' >E-mail:</label>
+                <input type='email' name='email' id='email'  maxlength="35" value=<%= person.email %> >
+                <br>
+                <label for='phone' >Phone no:</label>
+                <input type='text' name='phone' id='phone' maxlength="15" value=<%= person.phone %> >
+                <br>
+                <label for='account' >Linked Accounts:</label>
+                <input type='text' name='account' id='account' value=<%= person.linked_accounts %> >
+                <br>
+                <input type='submit' name='Submit' value='Submit' />
+            </fieldset>
+        </form>
+    </body>
+</html>

@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Profile</title>
+        <% include partial/cdn-includes.ejs %>
+    </head>
+    <body>
+        <h1>Welcome to the profile of <%= person.username %>:</h1><br>
+        <p>Badges: <%= person.badges %><br>
+        Clan: <%= person.clan %><br>
+        Avatar: <%= person.personalization %><br>
+        Level: <%= person.level %><br>
+        Friends: <%= person.friends %><br>
+        Inventory: <%= person.inventory %><br>
+        meta data: <%= person.meta_data %><br></p>
+        <% if (person.self===true) { %>
+            <br>
+            E-mail: <%= person.email %><br>
+            Phone: <%= person.phone %><br>
+            Linked Accounts: <%= person.linked_accounts %><br>
+            <a href="/cred-edit/<%= person.username %>"><button name='cred_EDIT'>EDIT CREDENTIALS</button></a>
+            <a href="/prof-edit/<%= person.username %>"><button name='prof_EDIT'>EDIT PROFILE</button></a>
+        <% } %>
+    </body>
+</html>

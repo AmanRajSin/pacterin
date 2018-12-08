@@ -1,0 +1,17 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Sign-In</title>
+        <% include partial/cdn-includes.ejs %>
+    </head>
+    <body>
+        <form id='edit' action='/prof-edit-submit' method='post' accept-charset='UTF-8'>
+            <fieldset >
+                <label for='avatar' >Avatar:</label>
+                <input type='text' name='avatar' id='avatar'  value=<%= person.personalization %> >
+                <br>
+                <input type='submit' name='Submit' value='Submit' />
+            </fieldset>
+        </form>
+    </body>
+</html>
