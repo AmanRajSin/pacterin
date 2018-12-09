@@ -8,7 +8,7 @@ const credEdit = require('./controllers/credEdit')
 const credChange = require('./controllers/credChange')
 const profEdit = require('./controllers/profEdit')
 const profChange = require('./controllers/profChange')
-const logout = require('./controllers/logout')
+const logoutControl = require('./controllers/logoutControl')
 const serverControl = require('./controllers/serverControl')
 
 var app = express();
@@ -23,5 +23,5 @@ credEdit(app);
 credChange(app);
 profEdit(app);
 profChange(app);
-logout(app);
+logoutControl(app);
 serverControl(app);
