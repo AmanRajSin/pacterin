@@ -7,4 +7,4 @@ module.exports = function(server) {
         console.log("New User Connected!!");
         
     });
-}
+};
