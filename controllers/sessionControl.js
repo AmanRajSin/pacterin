@@ -6,7 +6,7 @@ var conn = dbConnector();
 var sessionStore = new MYSQLSessionStore({
     clearExpired : true,
     checkExpirationInterval: 900000,
-    expiration: 86400000,
+    expiration: 1000*60*60*24,
     createDatabaseTable: true,
     connectionLimit: 1,
     endConnectionOnClose: true,
@@ -25,6 +25,7 @@ module.exports = {
     secret : 'some shitty string',
     store : sessionStore,
     resave : false,
-    saveUninitialized: false,
-    cookie : {}
+    saveUninitialized : false,
+    rolling : true,
+    cookie : { maxAge : 1000*60*60*24 }
 }
