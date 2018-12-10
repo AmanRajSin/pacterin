@@ -9,7 +9,7 @@ con.connect(function(err) {if (err) console.log(err);});
 module.exports = function(app){
     app.post('/login-submit', urlencodedParser, function(req, res) {        
         con.query("SELECT * FROM user_auth WHERE username = ? AND password = ?", [req.body.username, req.body.password], function (q_err, result, fields) {
-            if(result) {
+            if(result[0]) {
                 req.session.save(function(err) {
                     if(err) console.log(err);
                     else {
