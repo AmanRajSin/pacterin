@@ -7,13 +7,9 @@ module.exports = function(server) {
     var chat = io.of('/messenger');
 
     chat.on('connection', function(socket){
-        console.log("New User Connected : " + socket.request._query['foo']);
-
-        socket.on('change_username', function(data) {
-            socket.username = data.from;
-            userSocketId[socket.username] = socket.id;
-            console.log(userSocketId);
-        });
+        socket.username = socket.request._query.username;
+        userSocketId[socket.username] = socket.id;
+        console.log(userSocketId);
 
         socket.on('new_message', function(data){
             chat.to(userSocketId[data.to]).emit('new_message', {from: socket.username, message: data.message});
