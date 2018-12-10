@@ -14,6 +14,7 @@ const serverControl = require('./controllers/serverControl')
 var app = express();
 
 // Fire Controllers
+serverControl(app);
 loginControl(app);
 signupControl(app);
 usernameAvailability(app);
@@ -24,4 +25,3 @@ credChange(app);
 profEdit(app);
 profChange(app);
 logoutControl(app);
-serverControl(app);
