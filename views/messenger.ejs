@@ -4,11 +4,11 @@
         <title>Private Chat</title>
         <% include partial/cdn-includes.ejs %>
         <script>
+            var username = '<%= (username) ? username : `` %>';
+            if(!username) window.location.replace('/login');
             $(function(){
-                var socket = io.connect(window.location.origin + '/messenger', {query : 'foo=dummy' });
-
+                var socket = io.connect(window.location.origin + '/messenger', {query : 'username=' + username });
                 var message = $('#message');
-                var username = $('#username');
                 var to = $('#username-to');
                 var send_message = $('#send_message');
                 var send_username = $('#send_username');
@@ -16,10 +16,6 @@
 
                 send_message.click(function() {
                     socket.emit('new_message', { to: to.val(), message : message.val()});
-                });
-
-                send_username.click(function() {
-                    socket.emit('change_username', {from : username.val()});
                 });
 
                 socket.on('new_message', function(data) {
@@ -44,8 +40,6 @@
     </head>
     <body>
         <div style="width: 100%;position: absolute; top:0px; left: 0px;">
-            <input id="username" placeholder="username" maxlength="30"><button id="send_username">Submit Username</button>
-            <br>
             <input id="username-to" placeholder="To" maxlength="30">
             <br>
             <input id="message" placeholder="message" maxlength="200"><button id="send_message">Send</button>
