@@ -7,4 +7,4 @@ module.exports = function(){
         password: '1c7a0023',
         database: 'heroku_5a47c3968322ffa'
     });
-};
+}
