@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Private Chat</title>
+        <% include partial/cdn-includes.ejs %>
+        <script>
+            $(function(){
+                var socket = io.connect(window.location.origin + '/messenger', {query : 'foo=dummy' });
+
+                var message = $('#message');
+                var username = $('#username');
+                var to = $('#username-to');
+                var send_message = $('#send_message');
+                var send_username = $('#send_username');
+                var chatroom = $('#chatroom');
+
+                send_message.click(function() {
+                    socket.emit('new_message', { to: to.val(), message : message.val()});
+                });
+
+                send_username.click(function() {
+                    socket.emit('change_username', {from : username.val()});
+                });
+
+                socket.on('new_message', function(data) {
+                    chatroom.append('<p class="message">' + data.from + ' : ' + data.message + '</p>');
+                });
+
+                message.focus(function() {
+                    socket.emit('user_typing', {to: to.val()});
+                });
+                message.blur(function(){
+                    socket.emit('user_not_typing', {to: to.val()});
+                });
+
+                socket.on('get_user_typing', function(data){
+                    $('#typing').html('<i>' + data.from + ' is typing...</i>');
+                });
+                socket.on('get_user_not_typing', function(data){
+                    $('#typing').html('');
+                });
+            });
+        </script>
+    </head>
+    <body>
+        <div style="width: 100%;position: absolute; top:0px; left: 0px;">
+            <input id="username" placeholder="username" maxlength="30"><button id="send_username">Submit Username</button>
+            <br>
+            <input id="username-to" placeholder="To" maxlength="30">
+            <br>
+            <input id="message" placeholder="message" maxlength="200"><button id="send_message">Send</button>
+        </div>
+        <div id="typing" style="width: 100%; height: 60px; position: absolute; top:100px; left: 0px;"></div>
+        <div id="chatroom" style="width: 100%;position: absolute; top:160px; left: 0px;">
+        </div>
+    </body>
+</html>
