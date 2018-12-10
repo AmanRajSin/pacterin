@@ -28,4 +28,4 @@ module.exports = {
     saveUninitialized : false,
     rolling : true,
     cookie : { maxAge : 86400000 }
-}
+};
