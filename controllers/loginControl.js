@@ -17,6 +17,8 @@ module.exports = function(app){
                         res.redirect('/');
                     }
                 });
+            }else{
+                res.redirect('/login');
             }
         });
     });
