@@ -14,6 +14,7 @@ module.exports = function(app){
     app.get('/', function(req, res) { res.render('./index');});
     app.get('/login', function(req, res) { res.render('./login');});
     app.get('/signup', function(req, res) { res.render('./signup');});
+    app.get('/messenger', function(req, res) { res.render('./messenger');});
 
     // Listen to Port
     socketControl(app.listen(process.env.PORT||80));
