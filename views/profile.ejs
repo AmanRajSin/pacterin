@@ -20,6 +20,7 @@
             Linked Accounts: <%= person.linked_accounts %><br>
             <a href="/cred-edit/<%= person.username %>"><button name='cred_EDIT'>EDIT CREDENTIALS</button></a>
             <a href="/prof-edit/<%= person.username %>"><button name='prof_EDIT'>EDIT PROFILE</button></a>
+            <a href="/logout/<%= person.username %>"><button name='logout'>LOGOUT</button></a>
         <% } %>
     </body>
 </html>
