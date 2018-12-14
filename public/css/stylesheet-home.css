@@ -1,0 +1,142 @@
+body {
+    margin: 0;
+    border: 0;
+    background-color: rgb(26, 26, 26);
+}
+
+* {
+    box-sizing: border-box;
+    font-family: 'Exo 2', sans-serif;
+}
+
+* a {
+    text-decoration: none;
+}
+
+/* HOMEPAGE DESIGN */
+.home-header {
+    width: 100%;
+    min-height: 100px;
+}
+
+.logo {
+    max-height: 90px;
+    width: auto;
+    border-radius: 50%;
+    padding: 5px;
+}
+
+.home-header-profile {
+    float: right;
+    height: 100px;
+    color: white;
+    font-size: 40px;
+}
+
+.navbar {
+    list-style-type: none;
+    margin: 0;
+    padding: 0;
+    overflow: hidden;
+    background-image:linear-gradient(to bottom, rgb(148, 194, 209), rgb(175, 182, 177));;
+    border: 2px solid rgb(64, 64, 64);
+    font-size: 20px;
+}
+
+.navbar a {
+    display: block;
+    color: black;
+    padding: 10px;
+}
+
+.navbar a:hover:not(.active-tab) {
+    color: white;
+    background-color: rgb(0, 102, 255);
+}
+
+.navbar .navbar-left {
+    float: left;
+    border-right: 2px solid rgb(64, 64, 64);
+}
+
+.navbar .navbar-left:nth-child(5) {
+    border-right: none;
+}
+
+.navbar .navbar-right {
+    float: right;
+    border-left: 2px solid rgb(64, 64, 64);
+}
+
+.active-tab {
+    background-color: rgb(36, 143, 36);
+    color: black;
+}
+
+.dropdown-full {
+    position: absolute;
+    display: none;
+    width: 100%;
+    min-height: 200px;
+    background-image: linear-gradient(to top, rgb(148, 194, 209), rgb(175, 182, 177));
+    box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+    z-index: 1;
+    margin-left: -210px;
+}
+
+.dropdown-full ul {
+    list-style-type: none;
+    padding:0;
+    margin: 0;
+    overflow: hidden;
+}
+
+.dropdown-full a {
+    display: block;
+    color: black;
+    margin: 10px;
+    text-align: left;
+}
+
+.dropdown-full a:hover, .media-tab:hover > a {
+    color: white;
+    background-color: rgb(0, 82, 204);
+}
+
+.media-tab:hover .dropdown-full {
+    display: block;
+}
+
+.search-bar {
+    border-radius: 5px;
+    margin: 8px;
+    padding: 5px;
+    padding-left: 30px;
+    color: black;
+    width: 120px;
+    border: 1px solid black;
+    background-image: url('../images/Search-01.jpg');
+    background-size: 27px 27px;
+    background-position: 0 0;
+    background-repeat: no-repeat;
+    transition: width .5s ease-out;
+}
+
+.search-bar:focus {
+    width: 240px;
+}
+
+/*  GRID LAYOUT */
+.grid-container {
+    display: grid;
+    grid-template-columns: auto auto auto;
+    background-color: #2196F3;
+    padding: 10px;
+  }
+  .grid-item {
+    background-color: rgba(255, 255, 255, 0.8);
+    border: 1px solid rgba(0, 0, 0, 0.8);
+    padding: 20px;
+    font-size: 30px;
+    text-align: center;
+  }

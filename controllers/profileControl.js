@@ -9,7 +9,7 @@ module.exports = function(app){
         con.query("SELECT * FROM user_details WHERE username = ?", [req.params.id], function (err, result, fields) {
             if (err){
                 console.log(err);
-            }else{
+            }else if(result[0]){
                 con.query("SELECT * FROM user_cred WHERE username = ?", [req.params.id], function (err2, result2, fields2) {
                     if (err2){
                         console.log(err2);

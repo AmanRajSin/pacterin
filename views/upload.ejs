@@ -1,0 +1,203 @@
+<!DOCTYPE html>
+<html>
+                
+    <head>
+        <title>MEDIA</title>
+        <% include partial/cdn-includes.ejs %>
+        <meta charset="utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <link rel="stylesheet" type="text/css" media="screen" href="../css/stylesheet-media.css">
+        <link href="https://fonts.googleapis.com/css?family=Exo+2" rel="stylesheet">
+        <link href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.6-rc.0/css/select2.min.css" rel="stylesheet" />
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.6-rc.0/js/select2.min.js"></script>
+        <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.6.0/css/all.css" integrity="sha384-aOkxzJ5uQz7WBObEZcHvV5JvRW3TUc2rNPA7pe3AwnsUohiw1Vj2Rgx2KSOkF5+h" crossorigin="anonymous">
+        <script>
+            var username;
+            var d = new Date();
+            var date = new Date("1 Jan 1970");
+            $(document).ready(function(){
+                username = '<%= (username) ? username : `` %>';
+                if(!username) window.location.replace('/login');
+                var socket = io.connect(window.location.origin + '/upload', {query : 'username=' + username });
+                $('.uploadForm input').change(function () {
+                    $('.uploadForm p').text(this.files.length + " file selected");
+                });
+
+
+                $('.section-select').select2({
+                    placeholder: 'Select an option'
+                });
+
+                var maxLength = 200;
+                $('#postTitle').keyup(function() {
+                    var textlen = 'Title - ' + (maxLength - $(this).val().length) + ' characters remaining';
+                    $('label:first-child').text(textlen);
+                });
+
+                var maxLength2 = 500;
+                $('#postStory').keyup(function() {
+                    var textlen = 'Background story - ' + (maxLength2 - $(this).val().length) + ' characters remaining';
+                    $('#story-label').text(textlen);
+                });
+
+                $('#upload-button').click(function(){
+                    $('#overlay').show();
+                });
+
+                $('#overlay-close').click(function(){
+                    $('#overlay').hide();
+                });
+            });
+            jQuery.ajax({
+				url: "/uploaded-content",
+				data:'username=' + username,
+				type: "GET",
+				success:function(data) {
+                    var socket = io.connect(window.location.origin + '/media', {query : 'username=' + username });
+                    if (data!=''){
+                        $.each(data, function(index,val){
+                            var timer = d.getTime()-data[index].time;
+                            var months = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+                            if (timer<300000){
+                                timer='just now';
+                            }else if (timer < 3600000){
+                                timer=Math.floor(timer/60000);
+                                timer.toString();
+                                timer+='m';
+                            }else if (timer < 86400000){
+                                timer=Math.floor(timer/3600000);
+                                timer.toString();
+                                timer+='h';
+                            }else{
+                                timer = d.getDate().toString() + " " + months[d.getMonth()] + " " + d.getFullYear().toString() ;
+                            }
+                            if (data[index].type === "image" || data[index].type === "gif"){
+                                $('.content-container').prepend(`<p class="content-section-time">` + data[index].section.substring(1,data[index].section.length) + ` - ` + timer + `</p>
+                                                        <h3 class="content-title">` + data[index].title + `</h3>
+                                                        <img src="upload-images/` + data[index].time + data[index].username + data[index].ext + `" alt="Error 404!" class="content-post">
+                                                        <a href="#">Tag1</a> <a href="#">Tag2</a> <a href="#">Tag3</a> <br>
+                                                        <i class="fas fa-arrow-circle-up" id="up-`+data[index].time + data[index].username+`"></i> <i class="fas fa-arrow-circle-down" id="down-`+data[index].time + data[index].username+`"></i> <i class="far fa-comment-alt"></i> 
+                                                        <i class="fas fa-ellipsis-h" style="float:right;"><i class="fas fa-flag" style="color: red; float:right;"></i></i> <i class="far fa-save" style="float:right;"></i> <i class="fas fa-share-alt" style="float:right; color:blue;"></i>`);
+                            }else if (data[index].type === "video"){
+                                $('.content-container').prepend(`<p class="content-section-time">` + data[index].section.substring(1,data[index].section.length) + ` - ` + timer + `</p>
+                                                        <h3 class="content-title">` + data[index].title + `</h3>
+                                                        <video controls class="content-post"> <source src="./public/upload-videos/` + data[index].time + data[index].username + data[index].ext + `"> </video> >
+                                                        <a href="#">Tag1</a> <a href="#">Tag2</a> <a href="#">Tag3</a> <br>
+                                                        <i class="fas fa-arrow-circle-up" id="up-`+data[index].time + data[index].username+`"></i> <i class="fas fa-arrow-circle-down" id="down-`+data[index].time + data[index].username+`"></i> <i class="far fa-comment-alt"></i> 
+                                                        <i class="fas fa-ellipsis-h" style="float:right;"><i class="fas fa-flag" style="color: red; float:right;"></i></i> <i class="far fa-save" style="float:right;"></i> <i class="fas fa-share-alt" style="float:right; color:blue;"></i>`);
+                            }
+                            $(`#up-`+data[index].time + data[index].username).click(function(){
+                                socket.emit("upvote", {username:username, time:data[index].time, by:data[index].username});
+                            });
+                            $(`#down-`+data[index].time + data[index].username).click(function(){
+                                socket.emit("downvote", {username:username, time:data[index].time, by:data[index].username});
+                            });
+                        });
+                    } 
+				},
+				error:function () {
+					
+				}
+            });
+        </script>
+    </head>
+
+    <body>
+        <div class="flex-container">
+
+            <div class="flex-item">
+                <ul class="level-list">
+                    <li><a href="#" class="hot-tab active"><i class="fas fa-fire" style="color: red;"></i> &nbsp; HOT</a></li>
+                    <li><a href="#" class="trending-tab"><i class="fas fa-bolt" style="color: yellow"></i> &nbsp; TRENDING</a></li>
+                    <li><a href="#" class="fresh-tab"><i class="fas fa-hourglass-start" style="color:rgb(102, 51, 0)"></i> &nbsp; FRESH</a></li>
+                </ul>
+    
+                <h2 class="filter-header">Filter</h2>
+    
+                <label class="button-container-a">Pictures
+                    <input type="checkbox" checked="checked">
+                    <span class="checkmark-a"></span>
+                </label>
+                <label class="button-container-a">GIFs
+                    <input type="checkbox" checked="checked">
+                    <span class="checkmark-a"></span>
+                </label>
+                <label class="button-container-a">Videos
+                    <input type="checkbox" checked="checked">
+                    <span class="checkmark-a"></span>
+                </label>
+    
+                <h2 class="filter-header">Sections</h2>
+    
+                <form>
+                    <input type="text" name="search" placeholder="Search.." class="section-search-bar">
+                </form>
+    
+                <label class="button-container-b">Funny
+                    <input type="checkbox" name="radio">
+                    <span class="checkmark-b"></span>
+                </label>
+                <label class="button-container-b">Dark Humour
+                    <input type="checkbox" name="radio">
+                    <span class="checkmark-b"></span>
+                </label>
+                <label class="button-container-b">Awesome
+                    <input type="checkbox" name="radio">
+                    <span class="checkmark-b"></span>
+                </label>
+    
+            </div>
+    
+            <div class="flex-item">
+                
+                <div class="content-container">
+                
+                </div>
+                
+            </div>
+    
+            <div class="flex-item">
+                <button id="upload-button">UPLOAD</button>
+            </div>
+    
+    
+        </div>
+
+    <div id="overlay">
+        
+        <form action="/fileupload" method="post" enctype="multipart/form-data" class="uploadForm" >
+            
+            <input type="file" name="filetoupload" id="upload-post" required placeholder="">
+
+            <p>Drag your Image /GIF /Video here <br> OR <br> Click in this area to upload manually</p>
+
+            <div class="uploadForm-right">
+                
+                <label for="postTitle">Title</label>
+                <textarea name="postTitle" id="postTitle" maxlength="200" required></textarea>
+                
+                <label for="section">Section</label>
+                <select class="section-select" name="section" style="width: 30%;" required>
+                    <option value="Funny">Funny</option>
+                    <option value="Awesome">Awesome</option>
+                    <option value="Dark Humour">Dark Humour</option>
+                </select>
+
+                <label for="postStory" id="story-label">Background story (optional)</label>
+                <textarea name="postStory" id="postStory" maxlength="500"></textarea>
+
+                <label>
+                    <input type="checkbox" name="oc"> Original content 
+                </label>
+
+                <button type="submit">Upload</button>
+            </div>
+        </form>
+        
+        <div id="overlay-close"><i class="far fa-times-circle" style="color: white; font-size: 50px;"></i>
+        </div>
+
+    </div>
+
+    </body>
+</html>

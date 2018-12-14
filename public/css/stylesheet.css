@@ -1,0 +1,147 @@
+body {
+    margin: 0;
+    border: 0;
+}
+
+* {
+    box-sizing: border-box;
+    font-family: 'Exo 2', sans-serif;
+}
+
+* a {
+    text-decoration: none;
+}
+
+
+/* CHAT */
+.chat-bar-header {
+    min-height: 10vh;
+    background: black;
+    color: white;
+    font-size: 20px;
+    text-align: center;
+    padding: 20px 0;
+}
+
+.chat-head {
+    max-height: 100px;
+    background: linear-gradient(to bottom, 	rgb(153, 194, 255),rgb(204, 224, 255));
+    border: 1px solid black;
+}
+
+.chat-head-list {
+    position: relative;
+    bottom: 25px;
+    list-style-type: none;
+    margin: 0;
+    padding: 0;
+    display: inline-block;
+    font-size: 18px;
+}
+
+.chat-head-list li {
+    max-width: 300px;
+    max-height: 50px;
+    padding: 10px 15px;
+    text-align: center;
+    float: left;
+    overflow: hidden;
+    color: rgb(5, 63, 211);
+}
+
+.chat-head-message {
+    position: relative;
+    max-height: 30px;
+    width: auto;
+    margin-left: 100px;
+    bottom: 50px;
+    resize: none;
+    font-size: 12px;
+    overflow: hidden;
+    display: block;
+}
+
+.chat-screen-header {
+    height: 15vh;
+    background-color: black;
+}
+
+#typing {
+    color: green;
+    position: relative;
+    top: 10vh;
+    padding-left: 10px;
+    margin: 0;
+    font-style: italic;
+    font-weight: 900;
+}
+
+.chat-screen-header-name {
+    display: inline-block;
+    position: absolute;
+    top: 10px;
+    font-size: 25px;
+    color: antiquewhite;
+}
+
+.chat-screen-footer {
+    background-color: black;
+    height: 9.7vh;
+}
+
+#message {
+    width: 60%;
+    padding: 5px;
+    margin: 6px;
+    border-radius: 20px;
+    font-size: 18px;
+    resize: none;
+}
+
+.message-dialog-send {
+    max-width: 90%;
+    float: right;
+    background-color:	rgb(36, 168, 102);
+    color: white;
+    border-radius: 10px 10px 0 10px;
+    padding: 10px;
+    margin: 10px; 
+    font-size: 18px;
+    display: inline-block;
+}
+
+.message-dialog-receive {
+    max-width: 90%; 
+    background-color: grey;
+    color: black;
+    border-radius: 10px 10px 10px 0;
+    padding: 10px;
+    margin: 10px; 
+    font-size: 18px;
+    display: inline-block;
+}
+
+.chat-flex {
+    display: flex;
+    flex-direction: column-reverse;
+    background-color: lightblue;
+    height: 75vh;
+    overflow: auto;
+}
+
+.chat-flex > div {
+    width: 100%;
+}
+
+/* GRID DESIGN */
+.grid-container {
+    display: grid;
+    grid-template-columns: 40% 40% 20%;
+    background-color: #2196F3;
+    padding: 0;
+    grid-template-rows: minmax(100px,auto);
+}
+.grid-item {
+    background-color: rgba(255, 255, 255, 0.8);
+    border: 1px solid rgba(0, 0, 0, 0.8);
+}

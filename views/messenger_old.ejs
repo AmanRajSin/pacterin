@@ -1,17 +1,9 @@
 <!DOCTYPE html>
 <html>
-
-<head>
-    <title>Private Chat</title>
-    <% include partial/cdn-includes.ejs %>
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" type="text/css" href="./css/stylesheet.css">
-    <link href="https://fonts.googleapis.com/css?family=Exo+2" rel="stylesheet">
-    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.5.0/css/all.css" integrity="sha384-B4dIYHKNBt8Bc12p+WXckhzcICo0wtJAoU8YZTY5qE0Id1GSseTk6S+L3BlXeVIU" crossorigin="anonymous">
-        
+    <head>
+        <title>Private Chat</title>
+        <% include partial/cdn-includes.ejs %>
         <script>
-            $(document).ready(function(){
-
             var username = '<%= (username) ? username : `` %>';
             if(!username) window.location.replace('/login');
             var amTyping = false;
@@ -22,7 +14,7 @@
                 var to = $('#username-to');
                 var send_message = $('#send_message');
                 var send_username = $('#send_username');
-                var chatroom = $('#chat-flex');
+                var chatroom = $('#chatroom');
                 var user_to;
                 
                 // Chat history
@@ -111,44 +103,13 @@
                 //recent chats
                 socket.on('recent_chats_res', function(data){
                     $.each(data.message , function(index, value){
-                        var name;
-                        var sender='';
-                        result = value.id.split(':');
-                        if (result[0]==username){
-                            name=result[1];
-                        }else{
-                            name=result[0];
-                        }
-                        if (!value.messages.messages[0]){
-                            value.messages.messages[0] = {"from": name, "msg": " "};
-                        }
-                        if ( result[value.messages.messages[0].from] == username){
-                            sender = "You: ";
-                        }
-                        $(".chat-bar").append(`
-                            <div class="chat-head" id = "` + name + `" >
-                            <i class="fas fa-user-secret" style="font-size: 70px; padding: 10px;"></i>
-                            <ul class="chat-head-list">
-                                <li>` + name + `</li>
-                                <li>THURSDAY 9:43 AM</li>
-                            </ul>
-                            <p class="chat-head-message">` +  sender + value.messages.messages[0].msg + `</p>
-                            
-                            <script>
-                                $(document).ready(function(){  
-                                
-                                    
-                                var nam = '/messenger/` + name + `';
-                                
-                                $("`+ `#` + name + `").click(function(){
-                                window.location.href=nam}) }); 
-                            <\/script>
-                            </div>`
-                        );
+                        var result = value.id.split(':');
+                        console.log(result);
                     });
                 });
-                
+
                 socket.emit('recent_chats');
+
             });
             function fireInput(){
                 $('#message').trigger('input_event');
@@ -156,50 +117,16 @@
             function userChange(){
                 amTyping = false;
             }
-        });
         </script>
-</head>
-
-<body>
-    <div class="grid-container">
-        <div class="grid-item">
-            <div class="chat-bar">
-                <div class="chat-bar-header">
-                    RECENT CHATS
-                </div>
-            </div>
+    </head>
+    <body>
+        <div style="width: 100%;position: absolute; top:0px; left: 0px;">
+            <select id="username-to"></select>
+            <br>
+            <input id="message" placeholder="message" maxlength="200" oninput="fireInput()"><button id="send_message">Send</button>
         </div>
-
-        <div class="grid-item">
-            <div class="chat-screen-header">
-                <a href="" class="chat-screen-header-name">NAME</a>
-                <p id="typing">typing...</p>
-            </div>
-
-            <div class="chat-flex">
-                <div class="message-dialog-container">
-                    <div class="message-dialog-receive">
-                         I am receiver...
-                    </div>
-                </div>
-                <div class="message-dialog-container">
-                    <div class="message-dialog-send">
-                        I am sender...
-                    </div>
-                </div>
-            </div>
-
-            <div class="chat-screen-footer">
-                <form>
-                    <input id="message" placeholder="Type here..." maxlength="200" oninput="fireInput()">
-                    <button id="send_message">Send</button>
-                </form>
-            </div>
+        <div id="typing" style="width: 100%; height: 60px; position: absolute; top:100px; left: 0px;"></div>
+        <div id="chatroom" style="width: 100%;position: absolute; top:160px; left: 0px;">
         </div>
-
-        <div class="grid-item">3
-        </div> 
-    </div>
-</body>
-
+    </body>
 </html>

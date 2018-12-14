@@ -5,62 +5,90 @@
     <title>Private Chat</title>
     <% include partial/cdn-includes.ejs %>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" type="text/css" href="./css/stylesheet.css">
+    <link rel="stylesheet" type="text/css" href="../css/stylesheet.css">
     <link href="https://fonts.googleapis.com/css?family=Exo+2" rel="stylesheet">
     <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.5.0/css/all.css" integrity="sha384-B4dIYHKNBt8Bc12p+WXckhzcICo0wtJAoU8YZTY5qE0Id1GSseTk6S+L3BlXeVIU" crossorigin="anonymous">
         
         <script>
+            function fireInput(){
+                $('#message').trigger('input_event');
+            }
             $(document).ready(function(){
 
-            var username = '<%= (username) ? username : `` %>';
+            var username = '<%= (from) ? from : `` %>';
+            var to = '<%= (to) ? to : `` %>';
             if(!username) window.location.replace('/login');
             var amTyping = false;
             $(function(){
                 var socket = io.connect(window.location.origin + '/messenger', {query : 'username=' + username });
 
                 var message = $('#message');
-                var to = $('#username-to');
                 var send_message = $('#send_message');
-                var send_username = $('#send_username');
-                var chatroom = $('#chat-flex');
-                var user_to;
+                var chatroom = $('.chat-flex');
+
+                $(".chat-screen-header-name").text(to);
+                $(".chat-screen-header-name").attr("href" , "/profile/"+to);
+
                 
                 // Chat history
-                to.on('change', function() {
-                    if(to.find(':selected').text() != null){
-                        socket.emit('req_chat_history', {to: to.find(':selected').text()});    
-                        user_to = to.find(':selected').text();
-                    }
-                });
+                socket.emit('req_chat_history', {to: to});    
 
                 socket.on('chat_history', function(data){
-                    chatroom.html('');
-                    if(username<user_to)
+                    //chatroom.html('');
+                    if(username<to)
                     {
                         data.messages.reverse().forEach(element => {
-                            if(element.from == 0) chatroom.append('<p class="message"> Me : ' + element.msg + '</p>');        
-                            else chatroom.append('<p class="message">' + user_to + ' : ' + element.msg + '</p>');
+                            if(element.from == 0){ chatroom.prepend(`<div>
+                                                                        <div class="message-dialog-send">` +
+                                                                                element.msg
+                                                                        + `</div>
+                                                                    </div>`)}      
+                            else{ chatroom.prepend(`<div>
+                                                    <div class="message-dialog-receive">` +
+                                                        element.msg
+                                                    + `</div>
+                                                </div>`)};
                         });
                     }
                     else {
                         data.messages.reverse().forEach(element => {
-                            if(element.from == 1) chatroom.append('<p class="message"> Me : ' + element.msg + '</p>');        
-                            else chatroom.append('<p class="message">' + user_to + ' : ' + element.msg + '</p>');
+                            if(element.from == 1){ chatroom.prepend(`<div>
+                                                                        <div class="message-dialog-send">` +
+                                                                                element.msg
+                                                                        + `</div>
+                                                                    </div>`)}      
+                            else{ chatroom.prepend(`<div>
+                                                    <div class="message-dialog-receive">` +
+                                                        element.msg
+                                                    + `</div>
+                                                </div>`)};
                         });
                     }
                 });
                 
                 // Send messages
                 send_message.click(function() {
-                    socket.emit('new_message', { to: to.find(':selected').text(), message : message.val()});
-                    chatroom.append('<p class="message"> Me : ' + message.val() + '</p>');
-                    message.val('');
+                    if (message.val()!=''){
+                        socket.emit('new_message', { to: to, message : message.val()});
+                        chatroom.prepend(`<div>
+                                                                        <div class="message-dialog-send">` +
+                                                                                message.val()
+                                                                        + `</div>
+                                                                    </div>`);
+                        $("#" + to + " .chat-head-message").text("You: " + message.val());
+                        message.val('');
+                    }
                 });
 
                 message.on('keypress', function(e) {
-                    if (e.keyCode == 13) {
-                        socket.emit('new_message', { to: to.find(':selected').text(), message : message.val()});
-                        chatroom.append('<p class="message"> Me : ' + message.val() + '</p>');
+                    if (e.keyCode == 13 && message.val()!='') {
+                        socket.emit('new_message', { to: to, message : message.val()});
+                        chatroom.prepend(`<div>
+                                                                        <div class="message-dialog-send">` +
+                                                                                message.val()
+                                                                        + `</div>
+                                                                    </div>`);
+                        $("#" + to + " .chat-head-message").text("You: " + message.val());
                         message.val('');
                         message.trigger('input_event');
                         return false;
@@ -69,35 +97,44 @@
                 
                 // Receive messages
                 socket.on('new_message', function(data) {
-                    if(to.find(':selected').text()==data.from)
-                        chatroom.append('<p class="message">' + data.from + ' : ' + data.message + '</p>');
+                    if(to==data.from)
+                        chatroom.prepend(`<div>
+                                                    <div class="message-dialog-receive">` +
+                                                        data.message
+                                                    + `</div>
+                                                </div>`);
+                        $("#" + data.from + " .chat-head-message").text(data.message);
                 });
                 
                 // Is typing... events
+                /*$(document).on('blur', '#message', function () {
+                    amTyping = false;
+                    socket.emit('user_not_typing', {to: to});
+                });*/
                 message.blur(function(){
                     amTyping = false;
-                    socket.emit('user_not_typing', {to: to.find(':selected').text()});
+                    socket.emit('user_not_typing', {to: to});
                 });
 
                 message.on('input_event', function(){
                     if(amTyping==false && message.val().length > 0) {
                         amTyping = true;
-                        socket.emit('user_typing', {to: to.find(':selected').text()});
+                        socket.emit('user_typing', {to: to});
                     }
                     else if(amTyping==true && message.val().length === 0) {
                         amTyping = false;
-                        socket.emit('user_not_typing', {to: to.find(':selected').text()});
+                        socket.emit('user_not_typing', {to: to});
                     }
                 });
 
                 socket.on('get_user_typing', function(data){
-                    $('#typing').html('<i>' + data.from + ' is typing...</i>');
+                    $('#typing').html(data.from + ' is typing...');
                 });
 
                 socket.on('get_user_not_typing', function(data){
                     $('#typing').html('');
                 });
-                
+                /*
                 // Online friends
                 socket.on('friends_update', function(data){
                     var arr = $.grep(data.users, function(value){return value!=username;});
@@ -106,8 +143,8 @@
                         to.append($('<option></option>').val(index).html(value));
                     });
                     to.trigger('change');
-                });
-                
+                });*/
+
                 //recent chats
                 socket.on('recent_chats_res', function(data){
                     $.each(data.message , function(index, value){
@@ -122,7 +159,7 @@
                         if (!value.messages.messages[0]){
                             value.messages.messages[0] = {"from": name, "msg": " "};
                         }
-                        if ( result[value.messages.messages[0].from] == username){
+                        if (result[value.messages.messages[0].from] == username){
                             sender = "You: ";
                         }
                         $(".chat-bar").append(`
@@ -150,12 +187,7 @@
                 
                 socket.emit('recent_chats');
             });
-            function fireInput(){
-                $('#message').trigger('input_event');
-            }
-            function userChange(){
-                amTyping = false;
-            }
+            
         });
         </script>
 </head>
@@ -172,21 +204,12 @@
 
         <div class="grid-item">
             <div class="chat-screen-header">
-                <a href="" class="chat-screen-header-name">NAME</a>
-                <p id="typing">typing...</p>
+                <a href="" class="chat-screen-header-name"></a>
+                <p id="typing"></p>
             </div>
 
             <div class="chat-flex">
-                <div class="message-dialog-container">
-                    <div class="message-dialog-receive">
-                         I am receiver...
-                    </div>
-                </div>
-                <div class="message-dialog-container">
-                    <div class="message-dialog-send">
-                        I am sender...
-                    </div>
-                </div>
+                
             </div>
 
             <div class="chat-screen-footer">

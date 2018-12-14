@@ -1,0 +1,94 @@
+<!DOCTYPE <!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>Page Title</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" type="text/css" href="css/stylesheet-overlay.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.6-rc.0/css/select2.min.css" rel="stylesheet" />
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.6-rc.0/js/select2.min.js"></script>
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.6.1/css/all.css" integrity="sha384-gfdkjb5BdAXd+lj+gudLWI+BXq4IuLW5IT+brZEZsLFm++aCMlF1V92rMkPaX4PP" crossorigin="anonymous">
+
+<script>
+$(document).ready(function(){
+  $('.upload-form input').change(function () {
+    $('.upload-form p').text(this.files.length + " file selected");
+});
+
+
+$('.section-select').select2({
+  placeholder: 'Select an option'
+});
+
+var maxLength = 200;
+$('#post-title').keyup(function() {
+  var textlen = 'Title - ' + (maxLength - $(this).val().length) + ' characters remaining';
+  $('label:first-child').text(textlen);
+});
+
+var maxLength2 = 500;
+$('#post-story').keyup(function() {
+  var textlen = 'Background story - ' + (maxLength2 - $(this).val().length) + ' characters remaining';
+  $('#story-label').text(textlen);
+});
+
+$('#upload-button').click(function(){
+    $('#overlay').show();
+});
+
+$('#overlay-close').click(function(){
+    $('#overlay').hide();
+});
+
+});
+
+</script>
+
+</head>
+
+<body>
+
+    <h1>UGA BUGA TUGA NUGA 101010110101010101100101</h1>
+    <button id="upload-button">UPLOAD</button>
+
+    <div id="overlay">
+        
+        <form action="" method="post" enctype="multipart/form-data" class="upload-form">
+            
+            <input type="file" name="filetoupload" id="upload-post" required placeholder="">
+
+            <p>Drag your Image /GIF /Video here <br> OR <br> Click in this area to upload manually</p>
+
+            <div class="upload-form-right">
+                
+                <label for="post-title">Title</label>
+                <textarea name="post-title" id="post-title" maxlength="200" required></textarea>
+                
+                <label for="section">Section</label>
+                <select class="section-select" name="section" style="width: 30%;" required>
+                    <option value="funny">Funny</option>
+                    <option value="awesome">Awesome</option>
+                    <option value="dark-humour">Dark Humour</option>
+                </select>
+
+                <label for="post-story" id="story-label">Background story (optional)</label>
+                <textarea name="post-story" id="post-story" maxlength="500"></textarea>
+
+                <label>
+                    <input type="checkbox" name="oc"> Original content 
+                </label>
+
+                <button type="submit">Upload</button>
+            </div>
+
+            
+
+        </form>
+        
+        <div id="overlay-close"><i class="far fa-times-circle" style="color: white; font-size: 50px;"></i></div>
+
+    </div>
+</body>
+</html>

@@ -1,0 +1,345 @@
+body {
+    margin: 0;
+    padding: 0;
+}
+ * {
+    font-family: 'Exo 2', sans-serif;
+}
+
+a {
+    text-decoration: none;
+}
+
+
+/* FLEX LAYOUT */
+
+.flex-container {
+    display: flex;
+    flex-wrap: nowrap;
+    background-image: linear-gradient(to bottom, rgb(214, 224, 245), rgb(5, 10, 21));
+}
+
+.flex-container > div {
+    flex: 35% 45% 30%;
+    max-width: 45%;
+    min-height: 99.5vh;
+    border: 1px solid black;
+}
+
+/* PAGE DESIGN */
+/* LEVEL DESIGN */
+
+.level-list {
+    list-style-type: none;
+    margin: 0;
+    padding: 0;
+}
+
+.level-list a {
+    display: inline-block;
+    padding: 10px;
+    margin-left: 20px;
+    font-size: 20px;
+    color: black;
+    text-decoration: none;
+    min-width: 130px;
+    border-bottom: .5px solid black;
+    border-radius: 10px;
+}
+
+.hot-tab:hover:not(.active) {
+    background-image: linear-gradient(to top,red , rgba(255, 0, 0, 0) 30% )
+}
+
+.trending-tab:hover:not(.active) {
+    background-image: linear-gradient(to top,yellow , rgba(255, 0, 0, 0) 30% )
+}
+
+.fresh-tab:hover:not(.active) {
+    background-image: linear-gradient(to top,rgb(102, 51, 0) , rgba(255, 0, 0, 0) 30% )
+}
+
+.active {
+    background-image: linear-gradient(to top,white , rgba(255, 0, 0, 0) 30% )
+}
+
+/* FILTER DESIGN */
+
+.filter-header {
+    padding-left: 20px;
+    border-top: 3px solid black;
+    margin-top: 20px;
+}
+
+.button-container-a {
+    position: relative;
+    padding-left: 35px;
+    margin-bottom: 12px;
+    cursor: pointer;
+    font-size: 22px;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+    margin-left: 10px;
+    font-size: 20px;
+}
+
+.button-container-a input {
+    position: absolute;
+    opacity: 0;
+    cursor: pointer;
+    height: 0;
+    width: 0;
+}
+
+.checkmark-a {
+    position: absolute;
+    top: 0;
+    left: 0;
+    height: 25px;
+    width: 25px;
+    background-color: #eee;
+    border-radius: 50% 0;
+}
+
+.button-container-a:hover input ~ .checkmark-a {
+    background-color: #ccc;
+}
+  
+.button-container-a input:checked ~ .checkmark-a {
+    background-color: green;
+}
+  
+.checkmark-a:after {
+    content: "";
+    position: absolute;
+    display: none;
+}
+  
+.button-container-a input:checked ~ .checkmark-a:after {
+    display: block;
+}
+  
+.button-container-a .checkmark-a:after {
+    left: 9px;
+    top: 7px;
+    width: 7px;
+    height: 10px;
+    border: solid white;
+    border-width: 0 3px 3px 0;
+    -webkit-transform: rotate(45deg);
+    -ms-transform: rotate(45deg);
+    transform: rotate(45deg);
+}
+
+.section-search-bar {
+    border-radius: 0 20px 20px 0;
+    padding: 8px;
+    padding-left: 30px;
+    margin-left: 20px;
+    margin-bottom: 20px;
+    color: black;
+    width: 130px;
+    border: 1px solid black;
+    background-image: url('../assets/Search-plus-01.jpg');
+    background-size: 30px 30px;
+    background-position: 2px 4px;   
+    background-repeat: no-repeat;
+    transition: width .5s ease-out;
+}
+
+.section-search-bar:focus {
+    width: 200px;
+}
+
+.button-container-b {
+    display: block;
+    position: relative;
+    padding-left: 35px;
+    margin-bottom: 12px;
+    cursor: pointer;
+    font-size: 22px;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+    font-size: 18px;
+    margin-left: 10px;
+}
+
+.button-container-b input {
+    position: absolute;
+    opacity: 0;
+    cursor: pointer;
+}
+  
+.checkmark-b {
+    position: absolute;
+    top: 0;
+    left: 0;
+    height: 20px;
+    width: 20px;
+    background-color: #eee;
+    border-radius: 50%;
+}
+  
+.button-container-b:hover input ~ .checkmark-b {
+    background-color: #ccc;
+}
+  
+.button-container-b input:checked ~ .checkmark-b {
+    background-color: orange;
+}
+  
+.checkmark-b:after {
+    content: "";
+    position: absolute;
+    display: none;
+}
+
+.button-container-b input:checked ~ .checkmark-b:after {
+    display: block;
+}
+
+.button-container-b .checkmark-b:after {
+    top: 7px;
+    left: 6px;
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: white;
+}
+
+/* MEDIA CONTENT REGION DESIGN */
+
+.content-container {
+    margin: 20px;
+    border-bottom: 2px dotted black;
+    width: 600px;
+    height: auto;
+}
+
+.content-section-time{
+    margin: 5px;
+}
+
+.content-title {
+    margin: 5px;
+}
+
+.content-post {
+    width: 600px;
+    height: auto;
+    display: block;
+}
+
+.content-container i {
+    font-size: 40px;
+    margin: 3px;
+}
+
+/* OVERLAY DESIGN */
+
+#overlay {
+    position: fixed;
+    display: none;
+    width: 100%;
+    height: 100%;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: rgba(0,0,0,.9);
+    z-index: 5;
+}
+
+.uploadForm{
+    position: absolute;
+    top: 50%;
+    left: 30%;
+    width: 600px;
+    height: 400px;
+    border: 4px dashed darkred;
+    transform: translate(-50%,-50%);
+    background-color: #141a7599;
+    cursor: pointer;
+}
+
+.uploadForm > p {
+    width: 100%;
+    height: 100%;
+    text-align: center;
+    color: #ffffff;
+    font-size: 30px;
+    padding-top: 100px;
+}
+
+#upload-post{
+    position: absolute;
+    margin: 0;
+    padding: 0;
+    width: 100%;
+    height: 100%;
+    outline: none;
+    opacity: 0;
+}
+
+.uploadForm button{
+    margin: 0;
+    color: white;
+    background: #16a085;
+    border: none;
+    width: 100px;
+    height: 50px;
+    border-radius: 4px;
+    border-bottom: 4px solid rgb(12, 78, 63);
+    transition: all .2s ease;
+    outline: none;
+    cursor: pointer;
+}
+.uploadForm button:hover{
+    background: #149174;
+    color: #0C5645;
+}
+.uploadForm button:active{
+    border:0;
+}
+  
+.uploadForm-right {
+    display: flex;
+    flex-direction: column;
+    position: relative;
+    padding-left: 10px;
+    left: 610px;
+    bottom: 560px;
+    width: 500px;
+    height: 400px;
+    background-color: #141a7599;
+}
+
+.uploadForm label {
+    color: white;
+    font-size: 18px;
+}
+
+.uploadForm-right input , .uploadForm-right label {
+    margin: 5px; 
+    margin-left: 0;
+}
+
+
+#postTitle , #postStory {
+    padding: 3px;
+    resize: none;
+    width: 95%;
+    border-radius: 5px;
+    font-size: 18px;
+}
+
+#overlay-close {
+    position: absolute;
+    top: 10%;
+    right: 10%;
+    cursor: pointer;
+}
