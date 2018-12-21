@@ -8,7 +8,7 @@
     <link rel="stylesheet" type="text/css" href="../css/stylesheet.css">
     <link href="https://fonts.googleapis.com/css?family=Exo+2" rel="stylesheet">
     <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.5.0/css/all.css" integrity="sha384-B4dIYHKNBt8Bc12p+WXckhzcICo0wtJAoU8YZTY5qE0Id1GSseTk6S+L3BlXeVIU" crossorigin="anonymous">
-        
+
         <script>
             function fireInput(){
                 $('#message').trigger('input_event');
@@ -29,9 +29,9 @@
                 $(".chat-screen-header-name").text(to);
                 $(".chat-screen-header-name").attr("href" , "/profile/"+to);
 
-                
+
                 // Chat history
-                socket.emit('req_chat_history', {to: to});    
+                socket.emit('req_chat_history', {to: to});
 
                 socket.on('chat_history', function(data){
                     //chatroom.html('');
@@ -42,7 +42,7 @@
                                                                         <div class="message-dialog-send">` +
                                                                                 element.msg
                                                                         + `</div>
-                                                                    </div>`)}      
+                                                                    </div>`)}
                             else{ chatroom.prepend(`<div>
                                                     <div class="message-dialog-receive">` +
                                                         element.msg
@@ -56,7 +56,7 @@
                                                                         <div class="message-dialog-send">` +
                                                                                 element.msg
                                                                         + `</div>
-                                                                    </div>`)}      
+                                                                    </div>`)}
                             else{ chatroom.prepend(`<div>
                                                     <div class="message-dialog-receive">` +
                                                         element.msg
@@ -65,7 +65,7 @@
                         });
                     }
                 });
-                
+
                 // Send messages
                 send_message.click(function() {
                     if (message.val()!=''){
@@ -94,7 +94,7 @@
                         return false;
                     }
                 });
-                
+
                 // Receive messages
                 socket.on('new_message', function(data) {
                     if(to==data.from)
@@ -105,7 +105,7 @@
                                                 </div>`);
                         $("#" + data.from + " .chat-head-message").text(data.message);
                 });
-                
+
                 // Is typing... events
                 /*$(document).on('blur', '#message', function () {
                     amTyping = false;
@@ -170,24 +170,24 @@
                                 <li>THURSDAY 9:43 AM</li>
                             </ul>
                             <p class="chat-head-message">` +  sender + value.messages.messages[0].msg + `</p>
-                            
+
                             <script>
-                                $(document).ready(function(){  
-                                
-                                    
+                                $(document).ready(function(){
+
+
                                 var nam = '/messenger/` + name + `';
-                                
+
                                 $("`+ `#` + name + `").click(function(){
-                                window.location.href=nam}) }); 
+                                window.location.href=nam}) });
                             <\/script>
                             </div>`
                         );
                     });
                 });
-                
+
                 socket.emit('recent_chats');
             });
-            
+
         });
         </script>
 </head>
@@ -209,7 +209,7 @@
             </div>
 
             <div class="chat-flex">
-                
+
             </div>
 
             <div class="chat-screen-footer">
@@ -221,7 +221,7 @@
         </div>
 
         <div class="grid-item">3
-        </div> 
+        </div>
     </div>
 </body>
 

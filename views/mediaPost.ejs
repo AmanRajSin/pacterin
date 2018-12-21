@@ -1,0 +1,374 @@
+<!DOCTYPE html>
+<html>
+
+    <head>
+        <title>MEDIA</title>
+        <% include partial/cdn-includes.ejs %>
+        <meta charset="utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <link rel="stylesheet" type="text/css" media="screen" href="../css/stylesheet-media.css">
+        <link href="https://fonts.googleapis.com/css?family=Exo+2" rel="stylesheet">
+        <link href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.6-rc.0/css/select2.min.css" rel="stylesheet" />
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.6-rc.0/js/select2.min.js"></script>
+
+        <script>
+          const username = '<%= (username) ? username : `` %>';
+          const postid = '<%= (postid) ? postid : `` %>';
+          var d = new Date();
+          var socket = io.connect(window.location.origin + '/media', {query : 'username=' + username });
+            $(document).ready(function(){
+
+            });
+            /*function getmsg(){
+                jQuery.ajax({
+                    url: "/getmsg",
+                    data: 'username=' + username,
+                    type: "GET",
+                    success:function(data) {
+                            console.log(data);
+                    }
+                });
+            }*/
+          jQuery.ajax({
+              url: "/mediaContent/"+postid,
+              data:'username=' + username,
+              type: "GET",
+              success:function(data) {
+
+                var postid = data[0].time + data[0].username;
+
+
+                $(document).ready(function(){
+                    var count = $('.comment-section p').length - 1;
+                    $('.comment-header').html(count + ' Comments');
+
+                  $('.content-container').append(`<p class="content-section-time">` + data[0].section.substring(1,data[0].section.length) + `</p>
+                                        <h3 class="content-title" id=title-` + postid + `>` + data[0].title + `</h3>
+                                        <img src="../upload-images/` + postid + data[0].ext + `" alt="Error 404!" class="content-post">
+                                        <a href="#">`+ data[0].tag +`</a> <a href="#"></a> <a href="#"></a> <br>
+                                        <p id="`+ postid +`">` + (data[0].upvote_count - data[0].downvote_count) + `</p><br>
+                                        <i class="fas fa-arrow-circle-up" id="up-`+ postid +`"></i> <i class="fas fa-arrow-circle-down" id="down-` + postid +`"></i> <i id=comment-`+ postid +` class="far fa-comment-alt"></i>
+                                        <i class="fas fa-ellipsis-h" style="float:right;"><i class="fas fa-flag" style="color: red; float:right;"></i></i> <i class="far fa-save" style="float:right;"></i> <i class="fas fa-share-alt" style="float:right; color:blue;"></i>`);
+
+                  $('.backstory').append(data[0].story);
+                  $('.op').append(data[0].username);
+                  var linked = '../profile/' + data[0].username;
+                  $(".op").attr("href",linked);
+                  data[0].upvote = JSON.parse(data[0].upvote);
+                  data[0].downvote = JSON.parse(data[0].downvote);
+                  if(data[0].upvote[''+username] == 1){
+                      $(`#up-` + postid).addClass('active-vote');
+                  }
+                  else if(data[0].downvote[''+username] == 1){
+                      $(`#down-` + postid).addClass('active-vote');
+                  }
+
+                  var new_count = data[0].upvote_count - data[0].downvote_count;
+                  $(`#up-`+ postid).click(function(){
+                      socket.emit("upvote", {username:username, time:data[0].time, by:data[0].username});
+                      if($(`#up-` + postid).hasClass("active-vote") == true){
+                        new_count = new_count - 1;
+                      }else{
+                        new_count = new_count + 1;
+                      }
+                      $('#up-' + postid).toggleClass('active-vote');
+                      if($(`#down-` + postid).hasClass("active-vote") == true){
+                        $('#down-' + postid).removeClass('active-vote');
+                        new_count = new_count + 1;
+                      }
+                      $(`#` + postid).text(new_count.toString());
+                  });
+                 $(`#down-`+ postid).click(function(){
+                      socket.emit("downvote", {username:username, time:data[0].time, by:data[0].username});
+                    if($(`#down-` + postid).hasClass("active-vote") == true){
+                        new_count = new_count + 1;
+                    }else{
+                        new_count = new_count - 1;
+                    }
+                    $('#down-' + postid).toggleClass('active-vote');
+                    if($(`#up-` + postid).hasClass("active-vote") == true){
+                        $('#up-' + postid).removeClass('active-vote');
+                        new_count = new_count - 1;
+                    }
+                    $(`#` + postid).text(new_count.toString());
+
+                    });
+
+                });
+
+                $.each(data, function(index,val){
+                    if(index == 0){
+                        return true;
+                    }
+                    else if(typeof data[index].replyid == "undefined"){
+
+                        var suffix = data[index].commentid.match(/\d+/);
+                        suffix = parseInt(suffix);
+                        var test1 = data[index].commentid.substring(suffix.toString().length, data[index].commentid.length);
+                        var suffix2 = data[index].commentid.match(/\d+/);
+                        suffix = parseInt(suffix);
+                        var test1 = data[index].commentid.substring(suffix.toString().length, data[index].commentid.length);
+                        var new_commentcount = data[index].upvoteComment_count - data[index].downvoteComment_count;
+                        data[index].upvoteComment = JSON.parse(data[index].upvoteComment);
+                        data[index].downvoteComment = JSON.parse(data[index].downvoteComment);
+                        var d = new Date();
+                        var timer = d.getTime()-suffix2;
+                        var months = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+                        if (timer<300000){
+                            timer='just now';
+                        }else if (timer < 3600000){
+                            timer=Math.floor(timer/60000);
+                            timer.toString();
+                            timer+='m';
+                        }else if (timer < 86400000){
+                            timer=Math.floor(timer/3600000);
+                            timer.toString();
+                            timer+='h';
+                        }else{
+                            timer = d.getDate().toString() + " " + months[d.getMonth()] + " " + d.getFullYear().toString() ;
+                        }
+                        if(data[index].ext){
+
+                            $('.comment-section').append(`<div class="commentContainer" id="comment-`+ data[index].commentid +`">
+
+                                <div>
+                                    <i class="fas fa-user-ninja commentUser"></i>
+                                    <div class="commentThread">
+                                        <a href="#" id="userName">`+ test1 +`</a>  <span class="`+ data[index].commentid +`" id="commentStat">`+ new_commentcount +` - `+timer+`</span>
+                                        <p id="commentText">`+ data[index].comment +`</p>
+                                        <img src="../comment-images/`+data[index].commentid + data[index].ext+`" id="commentImage">
+                                        <i class="fas fa-arrow-up" id="up-`+ data[index].commentid +`"></i> <i class="fas fa-arrow-down" id="down-`+ data[index].commentid +`"></i><i class="fas fa-reply" id="reply-`+ data[index].commentid +`"></i>
+                                    </div>
+                                </div></div>`);
+                        }else{
+                            $('.comment-section').append(`<div class="commentContainer" id="comment-`+ data[index].commentid +`">
+
+                                <div>
+                                    <i class="fas fa-user-ninja commentUser"></i>
+                                    <div class="commentThread">
+                                        <a href="#" id="userName">`+ test1 +`</a>  <span class="`+ data[index].commentid +`" id="commentStat">`+ new_commentcount +` - `+timer+`</span>
+                                        <p id="commentText">`+ data[index].comment +`</p>
+
+                                        <i class="fas fa-arrow-up" id="up-`+ data[index].commentid +`"></i> <i class="fas fa-arrow-down" id="down-`+ data[index].commentid +`"></i><i class="fas fa-reply" id="reply-`+ data[index].commentid +`"></i>
+                                    </div>
+                                </div></div>`);
+                            }
+
+
+
+                            if(data[index].upvoteComment[''+username] == 1){
+                                $(`#up-` + data[index].commentid).addClass('active-vote');
+                            }
+                            else if(data[index].downvoteComment[''+username] == 1){
+                                $(`#down-` + data[index].commentid).addClass('active-vote');
+                            }
+
+                            $(`#up-`+data[index].commentid).click(function(){
+                                socket.emit("upvoteComment", {username:username, commentid:data[index].commentid});
+                                if($(`#up-` + data[index].commentid).hasClass("active-vote") == true){
+                                  new_commentcount = new_commentcount - 1;
+                                }else{
+                                  new_commentcount = new_commentcount + 1;
+                                }
+                                $('#up-' +data[index].commentid).toggleClass('active-vote');
+                                if($(`#down-` + data[index].commentid).hasClass("active-vote") == true){
+                                  $('#down-' + data[index].commentid).removeClass('active-vote');
+                                  new_commentcount = new_commentcount + 1;
+                                }
+                                $(`.` + data[index].commentid).text(new_commentcount.toString()+ ' - '+timer);
+                            });
+                            $(`#down-`+data[index].commentid).click(function(){
+                                socket.emit("downvoteComment", {username:username, commentid:data[index].commentid});
+                                if($(`#down-` + data[index].commentid).hasClass("active-vote") == true){
+                                  new_commentcount = new_commentcount + 1;
+                                }else{
+                                  new_commentcount = new_commentcount - 1;
+                                }
+                                $('#down-' +data[index].commentid).toggleClass('active-vote');
+                                if($(`#up-` + data[index].commentid).hasClass("active-vote") == true){
+                                  $('#up-' + data[index].commentid).removeClass('active-vote');
+                                  new_commentcount = new_commentcount - 1;
+                                }
+                                $(`.` + data[index].commentid).text(new_commentcount.toString()+ ' - '+ timer);
+
+                            });
+
+                        $(`#reply-`+ data[index].commentid).click(function(){
+
+                            $(`<div class="addComment">
+                                <i class="fas fa-user-ninja commentUserSubthread"></i>
+
+                                <form class="commentUpload" action="/replypost" method="post" enctype="multipart/form-data">
+                                    <textarea class="commentInput" name="commentVal" maxlength="500" placeholder="Write a comment..."></textarea>
+                                    <input type="text" name="postid" class="postid">
+                                    <input type="text" name="commentid" class="commentid">
+                                    <input type="file" name="ToBeUploaded" id="imageToUpload" />
+                                    <i class="fas fa-camera" id="commentImageButton"></i>
+                                    <button type="submit" id="commentSubmit">Submit</button>
+                                </form>
+                            </div>`).insertAfter(`#comment-`+data[index].commentid);
+                            $(".postid").val(postid);
+                            $(".postid").hide();
+                            $(".commentid").val(data[index].commentid);
+                            $(".commentid").hide();
+                            /*$('#comment-section').append(`<div class="addComment">
+                                <i class="fas fa-user-ninja commentUserSubthread"></i>
+
+                                <form class="commentUpload" action="/replypost" method="post" enctype="multipart/form-data">
+                                    <textarea class="commentInput" name="commentVal" maxlength="500" placeholder="Write a comment..."></textarea>
+                                    <input type="text" name="postid" id="postid">
+                                    <input type="text" name="commentid" id="commentid">
+                                    <input type="file" name="ToUpload" id="imageToUpload" />
+                                    <i class="fas fa-camera" id="commentImageButton"></i>
+                                    <button type="submit" id="commentSubmit">Submit</button>
+                                </form>
+                            </div>`);*/
+
+                        });
+                    }else{
+                            var no = data[index].replyid.match(/\d+/);
+                            no = parseInt(no);
+                            var d = new Date();
+                            var timer = d.getTime()-no;
+                            var months = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+                            if (timer<300000){
+                                timer='just now';
+                            }else if (timer < 3600000){
+                                timer=Math.floor(timer/60000);
+                                timer.toString();
+                                timer+='m';
+                            }else if (timer < 86400000){
+                                timer=Math.floor(timer/3600000);
+                                timer.toString();
+                                timer+='h';
+                            }else{
+                                timer = d.getDate().toString() + " " + months[d.getMonth()] + " " + d.getFullYear().toString() ;
+                            }
+
+
+                            var userTocomment = data[index].replyid.substring(no.toString().length, data[index].replyid.length);
+                            var new_replycount = data[index].upvoteReply_count-data[index].downvoteReply_count;
+
+                            if(data[index].ext){
+                                $(`#comment-` + data[index].commentid).append(`<div class="commentSubthreadContainer">
+                                    <i class="fas fa-user-ninja commentUserSubthread"></i>
+                                        <div class="commentSubthread">
+                                            <a href="#" id="userName">`+ userTocomment +`</a>  <span class="`+ data[index].replyid +`"id="commentStat">`+ new_replycount+' - '+ timer +`</span>
+                                            <p id="commentText">`+ data[index].reply +`</p>
+                                            <img src="../reply-images/`+data[index].replyid + data[index].ext+`" id="commentImage">
+                                            <i class="fas fa-arrow-up" id="replyup-`+ data[index].replyid +`"></i> <i class="fas fa-arrow-down" id="replydown-`+data[index].replyid+`"></i><i class="fas fa-reply" id="reply-`+ data[index].commentid +`"></i>
+                                        </div>
+                                    </div>`);
+                            }else{
+                                $(`#comment-` + data[index].commentid).append(`<div class="commentSubthreadContainer">
+                                    <i class="fas fa-user-ninja commentUserSubthread"></i>
+                                        <div class="commentSubthread">
+                                            <a href="#" id="userName">`+ userTocomment +`</a>  <span class="`+ data[index].replyid +`"id="commentStat">`+ new_replycount+' - '+ timer +`</span>
+                                            <p id="commentText">`+ data[index].reply +`</p>
+                                            <i class="fas fa-arrow-up" id="replyup-`+ data[index].replyid +`"></i> <i class="fas fa-arrow-down" id="replydown-`+data[index].replyid+`"></i><i class="fas fa-reply" class="reply-`+ data[index].commentid +`"></i>
+                                        </div>
+                                    </div>`);
+                            }
+                                $(`#replyup-`+ data[index].replyid).click(function(){
+                                    socket.emit("upvoteReply", {username:username, replyid:data[index].replyid});
+                                    if($(`#replyup-` + data[index].replyid).hasClass("active-vote") == true){
+                                      new_replycount = new_replycount - 1;
+                                    }else{
+                                      new_replycount = new_replycount + 1;
+                                    }
+                                    $('#replyup-'+ data[index].replyid).toggleClass('active-vote');
+                                    if($(`#replydown-`+ data[index].replyid).hasClass("active-vote") == true){
+                                      $('#replydown-'+ data[index].replyid).removeClass('active-vote');
+                                      new_replycount = new_replycount + 1;
+                                    }
+                                    $(`.` + data[index].replyid).text(new_replycount.toString() + ' - ' + timer);
+                                });
+                                $(`#replydown-`+data[index].replyid).click(function(){
+                                    socket.emit("downvoteReply", {username:username, replyid:data[index].replyid});
+                                    if($(`#replydown-` + data[index].replyid).hasClass("active-vote") == true){
+                                      new_replycount = new_replycount + 1;
+                                    }else{
+                                      new_replycount = new_replycount - 1;
+                                    }
+                                    $('#replydown-' +data[index].replyid).toggleClass('active-vote');
+                                    if($(`#replyup-` + data[index].replyid).hasClass("active-vote") == true){
+                                      $('#replyup-' + data[index].replyid).removeClass('active-vote');
+                                      new_replycount = new_replycount - 1;
+                                    }
+                                    $(`.` + data[index].replyid).text(new_replycount.toString() + ' - ' + timer);
+
+                                });
+
+
+
+                    }
+
+                });
+
+
+                $(".postid").val(postid);
+                $(".postid").hide();
+                $(".commentid").val(d.getTime() + username);
+                $(".commentid").hide();
+                //console.log($('#postid').text());
+                //console.log($('#commentid').text());
+
+
+              },
+                error:function () {
+      			}
+        });
+
+        //console.log('postid='+ postid + '&username=' + username);
+
+        </script>
+
+        <body>
+          <div class="flex-container">
+
+
+            <div class="flex-item">
+          <ul class="level-list">
+              <li><a href="#" class="hot-tab active"><i class="fas fa-fire" style="color: red;"></i> &nbsp; HOT</a></li>
+              <li><a href="#" class="trending-tab"><i class="fas fa-bolt" style="color: yellow"></i> &nbsp; TRENDING</a></li>
+              <li><a href="#" class="fresh-tab"><i class="fas fa-hourglass-start" style="color:rgb(102, 51, 0)"></i> &nbsp; FRESH</a></li>
+          </ul>
+        </div>
+
+
+          <div class="flex-item">
+
+            <div class="content-container">
+
+            </div>
+
+            <div class="comment-section">
+                <h2 style="border-bottom: 2px solid white;">Backstory <a class="op" style="float:right;">OP:  &nbsp; </a></h2>
+                <p class="backstory">...</p>
+                <h2 class="comment-header">x Comments</h2>
+
+                <div class="addComment">
+                    <i class="fas fa-user-ninja commentUser"></i>
+
+                    <form class="commentUpload" action="/commentpost" method="post" enctype="multipart/form-data">
+                        <textarea class="commentInput" name="commentVal" maxlength="500" placeholder="Write a comment..."></textarea>
+                        <input type="text" name="postid" class="postid">
+                        <input type="text" name="commentid" class="commentid">
+                        <input type="file" name="ToUpload" id="imageToUpload" />
+                        <i class="fas fa-camera" id="commentImageButton"></i>
+                        <button type="submit" id="commentSubmit">Submit</button>
+                    </form>
+                </div>
+
+                <div class="commentContainer">
+                </div>
+
+            </div>
+
+        </div>
+
+        <div>3</div>
+
+      </div>
+        </body>
+</html>

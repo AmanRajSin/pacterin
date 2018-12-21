@@ -1,6 +1,7 @@
 body {
     margin: 0;
     padding: 0;
+    background-color: grey;
 }
  * {
     font-family: 'Exo 2', sans-serif;
@@ -16,11 +17,10 @@ a {
 .flex-container {
     display: flex;
     flex-wrap: nowrap;
-    background-image: linear-gradient(to bottom, rgb(214, 224, 245), rgb(5, 10, 21));
 }
 
 .flex-container > div {
-    flex: 35% 45% 30%;
+    flex: 25% 45% 40%;
     max-width: 45%;
     min-height: 99.5vh;
     border: 1px solid black;
@@ -106,21 +106,21 @@ a {
 .button-container-a:hover input ~ .checkmark-a {
     background-color: #ccc;
 }
-  
+
 .button-container-a input:checked ~ .checkmark-a {
     background-color: green;
 }
-  
+
 .checkmark-a:after {
     content: "";
     position: absolute;
     display: none;
 }
-  
+
 .button-container-a input:checked ~ .checkmark-a:after {
     display: block;
 }
-  
+
 .button-container-a .checkmark-a:after {
     left: 9px;
     top: 7px;
@@ -144,7 +144,7 @@ a {
     border: 1px solid black;
     background-image: url('../assets/Search-plus-01.jpg');
     background-size: 30px 30px;
-    background-position: 2px 4px;   
+    background-position: 2px 4px;
     background-repeat: no-repeat;
     transition: width .5s ease-out;
 }
@@ -173,7 +173,7 @@ a {
     opacity: 0;
     cursor: pointer;
 }
-  
+
 .checkmark-b {
     position: absolute;
     top: 0;
@@ -183,15 +183,15 @@ a {
     background-color: #eee;
     border-radius: 50%;
 }
-  
+
 .button-container-b:hover input ~ .checkmark-b {
     background-color: #ccc;
 }
-  
+
 .button-container-b input:checked ~ .checkmark-b {
     background-color: orange;
 }
-  
+
 .checkmark-b:after {
     content: "";
     position: absolute;
@@ -226,6 +226,7 @@ a {
 
 .content-title {
     margin: 5px;
+    cursor: pointer;
 }
 
 .content-post {
@@ -237,9 +238,11 @@ a {
 .content-container i {
     font-size: 40px;
     margin: 3px;
+    cursor: pointer;
 }
 
 /* OVERLAY DESIGN */
+
 
 #overlay {
     position: fixed;
@@ -285,7 +288,7 @@ a {
     opacity: 0;
 }
 
-.uploadForm button{
+#upload-button{
     margin: 0;
     color: white;
     background: #16a085;
@@ -298,21 +301,21 @@ a {
     outline: none;
     cursor: pointer;
 }
-.uploadForm button:hover{
+#upload-button:hover{
     background: #149174;
     color: #0C5645;
 }
-.uploadForm button:active{
+#upload-button:active{
     border:0;
 }
-  
+
 .uploadForm-right {
     display: flex;
     flex-direction: column;
     position: relative;
     padding-left: 10px;
     left: 610px;
-    bottom: 560px;
+    bottom: 410px;
     width: 500px;
     height: 400px;
     background-color: #141a7599;
@@ -323,13 +326,13 @@ a {
     font-size: 18px;
 }
 
-.uploadForm-right input , .uploadForm-right label {
-    margin: 5px; 
+.upload-form-right input , .upload-form-right label {
+    margin: 5px;
     margin-left: 0;
 }
 
 
-#postTitle , #postStory {
+#postTitle , #postStory , #addInput{
     padding: 3px;
     resize: none;
     width: 95%;
@@ -342,4 +345,170 @@ a {
     top: 10%;
     right: 10%;
     cursor: pointer;
+}
+
+.itemPill {
+    margin: 3px;
+    border-radius: 5px;
+    background-color: royalblue;
+}
+
+.active-vote {
+  color: lightgreen;
+}
+
+#mediaLeft {
+  position: fixed;
+  left: 0;
+  overflow: auto;
+}
+
+#mediaMiddle {
+  position: absolute;
+  left: 25%;
+}
+
+#mediaRight {
+  position: absolute;
+  left: 70%;
+}
+
+/* COMMENT SECTION */
+
+.comment-section {
+    display: flex;
+    flex-direction: column;
+    width: 600px;
+    margin: 20px;
+}
+
+.addComment {
+    height: 125px;
+    border: 1px solid white;
+    padding: 10px;
+    border-radius: 5px;
+}
+
+.commentUpload {
+    position: relative;
+    float: right;
+    width: 520px;
+    height: auto;
+}
+
+.commentInput {
+    position: relative;
+    float: right;
+    width: 510px;
+    resize: none;
+    border: 1px solid white;
+    margin: 3px;
+    padding: 3px;
+    border-radius: 2px;
+}
+
+#imageToUpload {
+    width: 35px;
+	height: 35px;
+    opacity: 0;
+    margin: 0;
+    padding: 0;
+    top: 60px;
+    position: absolute;
+    outline: none;
+    cursor: pointer;
+    z-index: 2;
+}
+
+#commentImageButton {
+    font-size: 25px;
+    margin:5px;
+    cursor: pointer;
+}
+
+
+.comment-header {
+    border-bottom: 2px solid white;
+}
+
+.commentUser {
+    font-size: 50px;
+}
+
+#commentSubmit {
+    position: relative;
+    float: right;
+    border-radius: 3px;
+    background-color: rgb(73, 150, 175);
+    color: black;
+    border: 0;
+    padding: 5px 10px;
+    margin: 5px;
+    cursor: pointer;
+}
+
+.commentContainer {
+    position: relative;
+    margin-top: 5px;
+    margin-bottom: 5px;
+    padding: 10px;
+    border: 1px solid white;
+}
+
+.commentThread {
+    position: relative;
+    width: 510px;
+    top: 0;
+    float: right;
+    margin-left: 10px;
+}
+
+.commentThread i {
+    margin: 3px 10px;
+    font-size: 20px;
+}
+
+#userName {
+    color: white;
+}
+
+#userName:hover{
+    color: aqua;
+}
+
+#commentStat {
+    font-size: 12px;
+    color: blue;
+}
+
+#commentText {
+    margin: 0;
+    padding: 5px;
+}
+
+#commentImage {
+    max-width: 400px;
+    height: auto;
+    display: block;
+    margin: 3px 0;
+}
+
+.commentSubthreadContainer {
+    display: inline-block;
+}
+
+.commentUserSubthread {
+    font-size: 30px;
+    margin-left: 26px;
+}
+
+.commentSubthread {
+    width: 510px;
+    margin-left: 11px;
+    float: right;
+}
+
+.commentSubthread i {
+    margin: 3px 10px;
+    font-size: 20px;
 }

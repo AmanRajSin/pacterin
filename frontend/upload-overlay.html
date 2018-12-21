@@ -54,18 +54,18 @@ $('#overlay-close').click(function(){
     <button id="upload-button">UPLOAD</button>
 
     <div id="overlay">
-        
+
         <form action="" method="post" enctype="multipart/form-data" class="upload-form">
-            
+
             <input type="file" name="filetoupload" id="upload-post" required placeholder="">
 
             <p>Drag your Image /GIF /Video here <br> OR <br> Click in this area to upload manually</p>
 
             <div class="upload-form-right">
-                
+
                 <label for="post-title">Title</label>
                 <textarea name="post-title" id="post-title" maxlength="200" required></textarea>
-                
+
                 <label for="section">Section</label>
                 <select class="section-select" name="section" style="width: 30%;" required>
                     <option value="funny">Funny</option>
@@ -77,16 +77,16 @@ $('#overlay-close').click(function(){
                 <textarea name="post-story" id="post-story" maxlength="500"></textarea>
 
                 <label>
-                    <input type="checkbox" name="oc"> Original content 
+                    <input type="checkbox" name="oc"> Original content
                 </label>
 
                 <button type="submit">Upload</button>
             </div>
 
-            
+
 
         </form>
-        
+
         <div id="overlay-close"><i class="far fa-times-circle" style="color: white; font-size: 50px;"></i></div>
 
     </div>

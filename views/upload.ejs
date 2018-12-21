@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 <html>
-                
+
     <head>
         <title>MEDIA</title>
         <% include partial/cdn-includes.ejs %>
@@ -12,13 +12,19 @@
         <script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.6-rc.0/js/select2.min.js"></script>
         <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.6.0/css/all.css" integrity="sha384-aOkxzJ5uQz7WBObEZcHvV5JvRW3TUc2rNPA7pe3AwnsUohiw1Vj2Rgx2KSOkF5+h" crossorigin="anonymous">
         <script>
-            var username;
+            var	myItems= [];
+
             var d = new Date();
             var date = new Date("1 Jan 1970");
+            const username = '<%= (username) ? username : `` %>';
+            if(!username) window.location.replace('/login');
             $(document).ready(function(){
-                username = '<%= (username) ? username : `` %>';
-                if(!username) window.location.replace('/login');
                 var socket = io.connect(window.location.origin + '/upload', {query : 'username=' + username });
+                //display();
+                /*$('#Awesome').change(function () {
+                  $("#middle").load('/upload');
+                });*/
+
                 $('.uploadForm input').change(function () {
                     $('.uploadForm p').text(this.files.length + " file selected");
                 });
@@ -40,22 +46,127 @@
                     $('#story-label').text(textlen);
                 });
 
+                var inputElement = $('#addInput');
+                var container = $('#itemContainer');
+                var pill = $('.itemPill');
+                var storage = "";
+
                 $('#upload-button').click(function(){
                     $('#overlay').show();
+
                 });
+                /*function calling(){
+                    if(myItems.length < 2){
+                      inputElement.hide();
+                      inputElement.val(storage);
+                    }
+                });*/
 
                 $('#overlay-close').click(function(){
                     $('#overlay').hide();
                 });
-            });
+
+
+                inputElement.keypress(function(event){
+                  var keycode = (event.keyCode ? event.keyCode : event.which);
+                  if (keycode == '44') {
+                    var item = inputElement.val().slice(0,inputElement.val().length);
+                    if(myItems.length < 2) {
+                      myItems.push(item);
+                      container.append('<button name="'+item+'" class="itemPill" onclick="pillClick(this);">'+item+' <i class="fas fa-times"></i></button>');
+                      inputElement.val('');
+                      if(storage){
+                        storage = storage + "," + item;
+                      }else{
+                        storage = storage + item;
+                      }
+                      //inputElement.val(storage);
+
+                    }
+                    else if(myItems.length == 2){
+                      myItems.push(item);
+                      storage = storage + "," + item;
+                      container.append('<button name="'+item+'" class="itemPill" onclick="pillClick(this);">'+item+' <i class="fas fa-times"></i></button>');
+                      inputElement.val('');
+                      inputElement.hide();
+                      inputElement.val(storage);
+                      function stor(element){
+                        var test1 = storage.substring(1, storage.indexOf(element)-1);
+                        var test2 = storage.substring(storage.indexOf(element) + element.length, storage.length-1);
+                        storage = test1 + test2;
+
+                      };
+                    }
+                  }
+                });
+
+
+                });
+
+                  function pillClick(element) {
+                    const toRemove = element.name;
+
+                    myItems = myItems.filter(function(val){return val!=toRemove});
+                    element.remove();
+
+                    $('#addInput').show();
+                    $('#addInput').val('');
+                  }
+
+
+
+
+
+
+
+
             jQuery.ajax({
 				url: "/uploaded-content",
 				data:'username=' + username,
 				type: "GET",
 				success:function(data) {
+
+                      $("#pictures").change(function () {
+                        display();
+                      });
+                      $("#gifs").change(function () {
+                        display();
+                      });
+                      $("#videos").change(function () {
+                        display();
+                      });
+
+                      $(document).ready(function () {
+                        $.each(data, function(index,val){
+                          var section_do = data[index].section.substring(1,data[index].section.length);
+                          $('#' + section_do).prop('checked', true);
+                        });
+                        $("#pictures").prop('checked', true);
+                        $("#gifs").prop('checked', true);
+                        $("#videos").prop('checked', true);
+                        display();
+                        $.each(data, function(index,val){
+                          var section_do = data[index].section.substring(1,data[index].section.length);
+                          $('#' + section_do).prop('checked', false);
+                        });
+                      });
+
+                    $.each(data, function(index,val){
+                      var section_do = data[index].section.substring(1,data[index].section.length);
+                      $('#' + section_do).change(function () {
+                        display();
+                      //$(".content-container").html('');
+                      //$("#middle").load(location.href+" #middle>*","");
+                      });
+                    });
                     var socket = io.connect(window.location.origin + '/media', {query : 'username=' + username });
                     if (data!=''){
+                      function display(){
+                        $(".content-container").html('');
                         $.each(data, function(index,val){
+                            data[index].upvote = JSON.parse(data[index].upvote);
+                            data[index].downvote = JSON.parse(data[index].downvote);
+                            var postid = data[index].time + data[index].username;
                             var timer = d.getTime()-data[index].time;
                             var months = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
                             if (timer<300000){
@@ -71,32 +182,101 @@
                             }else{
                                 timer = d.getDate().toString() + " " + months[d.getMonth()] + " " + d.getFullYear().toString() ;
                             }
-                            if (data[index].type === "image" || data[index].type === "gif"){
-                                $('.content-container').prepend(`<p class="content-section-time">` + data[index].section.substring(1,data[index].section.length) + ` - ` + timer + `</p>
-                                                        <h3 class="content-title">` + data[index].title + `</h3>
-                                                        <img src="upload-images/` + data[index].time + data[index].username + data[index].ext + `" alt="Error 404!" class="content-post">
-                                                        <a href="#">Tag1</a> <a href="#">Tag2</a> <a href="#">Tag3</a> <br>
-                                                        <i class="fas fa-arrow-circle-up" id="up-`+data[index].time + data[index].username+`"></i> <i class="fas fa-arrow-circle-down" id="down-`+data[index].time + data[index].username+`"></i> <i class="far fa-comment-alt"></i> 
-                                                        <i class="fas fa-ellipsis-h" style="float:right;"><i class="fas fa-flag" style="color: red; float:right;"></i></i> <i class="far fa-save" style="float:right;"></i> <i class="fas fa-share-alt" style="float:right; color:blue;"></i>`);
-                            }else if (data[index].type === "video"){
-                                $('.content-container').prepend(`<p class="content-section-time">` + data[index].section.substring(1,data[index].section.length) + ` - ` + timer + `</p>
-                                                        <h3 class="content-title">` + data[index].title + `</h3>
-                                                        <video controls class="content-post"> <source src="./public/upload-videos/` + data[index].time + data[index].username + data[index].ext + `"> </video> >
-                                                        <a href="#">Tag1</a> <a href="#">Tag2</a> <a href="#">Tag3</a> <br>
-                                                        <i class="fas fa-arrow-circle-up" id="up-`+data[index].time + data[index].username+`"></i> <i class="fas fa-arrow-circle-down" id="down-`+data[index].time + data[index].username+`"></i> <i class="far fa-comment-alt"></i> 
-                                                        <i class="fas fa-ellipsis-h" style="float:right;"><i class="fas fa-flag" style="color: red; float:right;"></i></i> <i class="far fa-save" style="float:right;"></i> <i class="fas fa-share-alt" style="float:right; color:blue;"></i>`);
+
+
+                            var section_check = data[index].section.substring(1,data[index].section.length)
+                            var tag1 = data[index].tag.split(",");
+                            if (data[index].type === "image"){
+                                if($("#pictures"). prop("checked") == true){
+                                  if($('#'+ section_check).prop("checked") == true){
+
+                                    $('#mediaMiddle').prepend(`<div class="content-container"><p class="content-section-time">` + data[index].section.substring(1,data[index].section.length) + ` - ` + timer + `</p>
+                                                            <h3 class="content-title" id=title-` + postid + `>` + data[index].title + `</h3>
+                                                            <img src="upload-images/` + data[index].time + data[index].username + data[index].ext + `" alt="Error 404!" class="content-post">
+                                                            <a href="#">`+ tag1[0] +`</a> <a href="#">`+ tag1[1] +`</a> <a href="#">`+ tag1[2] +`</a> <br>
+                                                            <p id="`+data[index].time + data[index].username+`">` + (data[index].upvote_count - data[index].downvote_count) + `</p><br>
+                                                            <i class="fas fa-arrow-circle-up" id="up-`+data[index].time + data[index].username+`"></i> <i class="fas fa-arrow-circle-down" id="down-`+data[index].time + data[index].username+`"></i> <i id=comment-`+ data[index].time + data[index].username +` class="far fa-comment-alt"></i>
+                                                            <i class="fas fa-ellipsis-h" style="float:right;"><i class="fas fa-flag" style="color: red; float:right;"></i></i> <i class="far fa-save" style="float:right;"></i> <i class="fas fa-share-alt" style="float:right; color:blue;"></i></div>`);
+                                  }
+
+                                }
                             }
+                            else if (data[index].type === "gif"){
+                                if($("#gifs"). prop("checked") == true){
+                                  if($('#' + section_check).prop("checked") == true){
+                                    $('#mediaMiddle').prepend(`<div class="content-container"><p class="content-section-time">` + data[index].section.substring(1,data[index].section.length) + ` - ` + timer + `</p>
+                                                            <h3 class="content-title" id=title-` + postid + `>` + data[index].title + `</h3>
+                                                            <img src="upload-images/` + data[index].time + data[index].username + data[index].ext + `" alt="Error 404!" class="content-post">
+                                                            <a href="#">`+ tag1[0] +`</a> <a href="#">`+ tag1[1] +`</a> <a href="#">`+ tag1[2] +`</a> <br>
+                                                            <p id="`+data[index].time + data[index].username+`">` + (data[index].upvote_count - data[index].downvote_count) + `</p><br>
+                                                            <i class="fas fa-arrow-circle-up" id="up-`+data[index].time + data[index].username+`"></i> <i class="fas fa-arrow-circle-down" id="down-`+data[index].time + data[index].username+`"></i> <i id=comment-`+ data[index].time + data[index].username +` class="far fa-comment-alt"></i>
+                                                            <i class="fas fa-ellipsis-h" style="float:right;"><i class="fas fa-flag" style="color: red; float:right;"></i></i> <i class="far fa-save" style="float:right;"></i> <i class="fas fa-share-alt" style="float:right; color:blue;"></i></div>`);
+                                  }
+                                }
+                            }
+                            else if (data[index].type === "video"){
+                                  if($("#videos"). prop("checked") == true){
+                                         if($('#' + section_check).prop("checked") == true){
+                                             $('#mediaMiddle').prepend(`<div class="content-container"><p class="content-section-time">` + data[index].section.substring(1,data[index].section.length) + ` - ` + timer + `</p>
+                                                  <h3 class="content-title" id=title-` + postid + `>` + data[index].title + `</h3>
+                                                  <video controls class="content-post"> <source src="./public/upload-videos/` + data[index].time + data[index].username + data[index].ext + `"> </video> >
+                                                  <a href="#">`+ tag1[0] +`</a> <a href="#">`+ tag1[1] +`</a> <a href="#">`+ tag1[2] +`</a> <br>
+                                                  <p id="`+data[index].time + data[index].username+`">` + (data[index].upvote_count - data[index].downvote_count) + `</p><br>
+                                                  <i class="fas fa-arrow-circle-up" id="up-`+data[index].time + data[index].username+`"></i> <i class="fas fa-arrow-circle-down" id="down-`+data[index].time + data[index].username+`"></i> <i id=comment-`+ data[index].time + data[index].username +` class="far fa-comment-alt"></i>
+                                                  <i class="fas fa-ellipsis-h" style="float:right;"><i class="fas fa-flag" style="color: red; float:right;"></i></i> <i class="far fa-save" style="float:right;"></i> <i class="fas fa-share-alt" style="float:right; color:blue;"></i></div>`);
+                                          }
+                                  }
+                            }
+
+                            $("#comment-"+ postid).click(function(){
+                                window.location.href = '/mediaPost/' + data[index].time + data[index].username;
+                            });
+                            $("#title-"+ postid).click(function(){
+                                window.location.href = '/mediaPost/' + data[index].time + data[index].username;
+                            });
+                            if(data[index].upvote[''+username] == 1){
+                                $(`#up-` + data[index].time + data[index].username).addClass('active-vote');
+                            }
+                            else if(data[index].downvote[''+username] == 1){
+                                $(`#down-` + data[index].time + data[index].username).addClass('active-vote');
+                            }
+
+                            var new_count = data[index].upvote_count - data[index].downvote_count;
                             $(`#up-`+data[index].time + data[index].username).click(function(){
                                 socket.emit("upvote", {username:username, time:data[index].time, by:data[index].username});
+                                if($(`#up-` + data[index].time + data[index].username).hasClass("active-vote") == true){
+                                  new_count = new_count - 1;
+                                }else{
+                                  new_count = new_count + 1;
+                                }
+                                $('#up-' +data[index].time + data[index].username).toggleClass('active-vote');
+                                if($(`#down-` + data[index].time + data[index].username).hasClass("active-vote") == true){
+                                  $('#down-' + data[index].time + data[index].username).removeClass('active-vote');
+                                  new_count = new_count + 1;
+                                }
+                                $(`#` + data[index].time + data[index].username).text(new_count.toString());
                             });
                             $(`#down-`+data[index].time + data[index].username).click(function(){
                                 socket.emit("downvote", {username:username, time:data[index].time, by:data[index].username});
+                                if($(`#down-` + data[index].time + data[index].username).hasClass("active-vote") == true){
+                                  new_count = new_count + 1;
+                                }else{
+                                  new_count = new_count - 1;
+                                }
+                                $('#down-' +data[index].time + data[index].username).toggleClass('active-vote');
+                                if($(`#up-` + data[index].time + data[index].username).hasClass("active-vote") == true){
+                                  $('#up-' + data[index].time + data[index].username).removeClass('active-vote');
+                                  new_count = new_count - 1;
+                                }
+                                $(`#` + data[index].time + data[index].username).text(new_count.toString());
+
                             });
                         });
-                    } 
+                      }
+                    }
 				},
 				error:function () {
-					
+
 				}
             });
         </script>
@@ -105,95 +285,199 @@
     <body>
         <div class="flex-container">
 
-            <div class="flex-item">
+            <div id="mediaLeft" class="flex-item" style="max-height: 99.5vh;">
                 <ul class="level-list">
                     <li><a href="#" class="hot-tab active"><i class="fas fa-fire" style="color: red;"></i> &nbsp; HOT</a></li>
                     <li><a href="#" class="trending-tab"><i class="fas fa-bolt" style="color: yellow"></i> &nbsp; TRENDING</a></li>
                     <li><a href="#" class="fresh-tab"><i class="fas fa-hourglass-start" style="color:rgb(102, 51, 0)"></i> &nbsp; FRESH</a></li>
                 </ul>
-    
+
                 <h2 class="filter-header">Filter</h2>
-    
+
                 <label class="button-container-a">Pictures
-                    <input type="checkbox" checked="checked">
+                    <input type="checkbox" id="pictures" checked="checked">
                     <span class="checkmark-a"></span>
                 </label>
                 <label class="button-container-a">GIFs
-                    <input type="checkbox" checked="checked">
+                    <input type="checkbox" id="gifs" checked="checked">
                     <span class="checkmark-a"></span>
                 </label>
                 <label class="button-container-a">Videos
-                    <input type="checkbox" checked="checked">
+                    <input type="checkbox" id="videos" checked="checked">
                     <span class="checkmark-a"></span>
                 </label>
-    
+
                 <h2 class="filter-header">Sections</h2>
-    
+
                 <form>
                     <input type="text" name="search" placeholder="Search.." class="section-search-bar">
                 </form>
-    
+
                 <label class="button-container-b">Funny
-                    <input type="checkbox" name="radio">
+                    <input type="checkbox" id="Funny" name="radio">
                     <span class="checkmark-b"></span>
                 </label>
                 <label class="button-container-b">Dark Humour
-                    <input type="checkbox" name="radio">
+                    <input type="checkbox" id="Dark Humour" name="radio">
                     <span class="checkmark-b"></span>
                 </label>
                 <label class="button-container-b">Awesome
-                    <input type="checkbox" name="radio">
+                    <input type="checkbox" id="Awesome" name="radio">
                     <span class="checkmark-b"></span>
                 </label>
-    
+                <label class="button-container-b">Animals
+                    <input type="checkbox" id="Animals" name="radio">
+                    <span class="checkmark-b"></span>
+                </label>
+                <label class="button-container-b">Anime and Manga
+                    <input type="checkbox" id="Anime and Manga" name="radio">
+                    <span class="checkmark-b"></span>
+                </label>
+                <label class="button-container-b">Car
+                    <input type="checkbox" id="Car" name="radio">
+                    <span class="checkmark-b"></span>
+                </label>
+                <label class="button-container-b">Comic
+                    <input type="checkbox" id="Comic" name="radio">
+                    <span class="checkmark-b"></span>
+                </label>
+                <label class="button-container-b">Food and Drinks
+                    <input type="checkbox" id="Food and Drinks" name="radio">
+                    <span class="checkmark-b"></span>
+                </label>
+                <label class="button-container-b">Drawing
+                    <input type="checkbox" id="Drawing" name="radio">
+                    <span class="checkmark-b"></span>
+                </label>
+                <label class="button-container-b">Football
+                    <input type="checkbox" id="Football" name="radio">
+                    <span class="checkmark-b"></span>
+                </label>
+                <label class="button-container-b">Cricket
+                    <input type="checkbox" id="Cricket" name="radio">
+                    <span class="checkmark-b"></span>
+                </label>
+                <label class="button-container-b">Gaming
+                    <input type="checkbox" id="Gaming" name="radio">
+                    <span class="checkmark-b"></span>
+                </label>
+                <label class="button-container-b">Horror
+                    <input type="checkbox" id="Horro" name="radio">
+                    <span class="checkmark-b"></span>
+                </label>
+                <label class="button-container-b">History
+                    <input type="checkbox" id="History" name="radio">
+                    <span class="checkmark-b"></span>
+                </label>
+                <label class="button-container-b">Music
+                    <input type="checkbox" id="Music" name="radio">
+                    <span class="checkmark-b"></span>
+                </label>
+                <label class="button-container-b">Movies and TV
+                    <input type="checkbox" id="Movies and TV" name="radio">
+                    <span class="checkmark-b"></span>
+                </label>
+                <label class="button-container-b">Politics
+                    <input type="checkbox" id="Politics" name="radio">
+                    <span class="checkmark-b"></span>
+                </label>
+                <label class="button-container-b">Relationship
+                    <input type="checkbox" id="Relationship" name="radio">
+                    <span class="checkmark-b"></span>
+                </label>
+                <label class="button-container-b">Roast Me
+                    <input type="checkbox" id="Roast Me" name="radio">
+                    <span class="checkmark-b"></span>
+                </label>
+                <label class="button-container-b">Savage
+                    <input type="checkbox" id="Savage" name="radio">
+                    <span class="checkmark-b"></span>
+                </label>
+                <label class="button-container-b">Sci Tech
+                    <input type="checkbox" id="Sci Tech" name="radio">
+                    <span class="checkmark-b"></span>
+                </label>
+                <label class="button-container-b">Superhero
+                    <input type="checkbox" id="Superhero" name="radio">
+                    <span class="checkmark-b"></span>
+                </label>
+                <label class="button-container-b">Travel
+                    <input type="checkbox" id="Travel" name="radio">
+                    <span class="checkmark-b"></span>
+                </label>
+
+
+
             </div>
-    
-            <div class="flex-item">
-                
-                <div class="content-container">
-                
-                </div>
-                
+
+            <div class="flex-item" id="mediaMiddle">
+
             </div>
-    
-            <div class="flex-item">
+
+            <div class="flex-item" id="mediaRight">
                 <button id="upload-button">UPLOAD</button>
             </div>
-    
-    
+
         </div>
 
     <div id="overlay">
-        
+
         <form action="/fileupload" method="post" enctype="multipart/form-data" class="uploadForm" >
-            
+
             <input type="file" name="filetoupload" id="upload-post" required placeholder="">
 
             <p>Drag your Image /GIF /Video here <br> OR <br> Click in this area to upload manually</p>
 
             <div class="uploadForm-right">
-                
+
                 <label for="postTitle">Title</label>
                 <textarea name="postTitle" id="postTitle" maxlength="200" required></textarea>
-                
+
                 <label for="section">Section</label>
                 <select class="section-select" name="section" style="width: 30%;" required>
                     <option value="Funny">Funny</option>
                     <option value="Awesome">Awesome</option>
                     <option value="Dark Humour">Dark Humour</option>
+                    <option value="Animals">Animals</option>
+                    <option value="Anime and Manga">Anime and Manga</option>
+                    <option value="Car">Car</option>
+                    <option value="Comic">Comic</option>
+                    <option value="Food and Drinks">Food and Drinks</option>
+                    <option value="Drawing">Drawing</option>
+                    <option value="Animals">Animals</option>
+                    <option value="Football">Football</option>
+                    <option value="Cricket">Cricket</option>
+                    <option value="Gaming">Gaming</option>
+                    <option value="Horror">Horror</option>
+                    <option value="History">History</option>
+                    <option value="Music">Music</option>
+                    <option value="Movies and TV">Movies and TV</option>
+                    <option value="Poltics">Politics</option>
+                    <option value="Relationship">Relationship</option>
+                    <option value="Roast Me">Roast Me</option>
+                    <option value="Savage">Savage</option>
+                    <option value="Sci Tech">Sci Tech</option>
+                    <option value="Superhero">Superhero</option>
+                    <option value="Travel">Travel</option>
+
                 </select>
+
+                <label for="tagPills">Tags</label>
+                <div id="itemContainer" name="itemContainer"></div>
+
+                <input id="addInput" name="tagPills" type="text" autoComplete="off" maxLength="20" onkeyup="this.value=this.value.replace(',','')" placeholder="Tag1, Tag2, Tag3"/>
 
                 <label for="postStory" id="story-label">Background story (optional)</label>
                 <textarea name="postStory" id="postStory" maxlength="500"></textarea>
 
                 <label>
-                    <input type="checkbox" name="oc"> Original content 
+                    <input type="checkbox" name="oc"> Original content
                 </label>
 
-                <button type="submit">Upload</button>
+                <button type="submit" id="upload-button" onclick="calling();">Upload</button>
             </div>
         </form>
-        
+
         <div id="overlay-close"><i class="far fa-times-circle" style="color: white; font-size: 50px;"></i>
         </div>
 
