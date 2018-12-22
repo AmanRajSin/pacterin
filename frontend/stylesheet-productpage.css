@@ -1,0 +1,215 @@
+body {
+    margin: 0;
+    background-color: black;
+}
+
+* {
+    font-family: 'Exo 2', sans-serif;
+}
+
+a {
+    color: white;
+    text-decoration: none;
+}
+
+/* NAVBAR */
+
+.navbar {
+    display: inline-block;
+    list-style-type: none;
+    position: sticky;
+    width: 99.8%;
+    top:0;
+    margin: 0;
+    padding: 0;
+    background-image:linear-gradient(to bottom, rgb(0, 51, 204), rgb(0, 102, 204));;
+    border: 1px solid rgb(64, 64, 64);
+    font-size: 20px;
+    z-index: 999;
+    height: 44px;
+}
+
+.navbar a {
+    display: block;
+    color: black;
+    padding: 12.5px 15px;
+    font-size: 16px;
+    font-weight: bolder;
+}
+
+.navbar a:hover {
+    color: white;
+    background-image: radial-gradient(rgb(26, 255, 255, .1),rgb(26, 255, 255, .4),rgb(26, 255, 255, .8));
+}
+
+.navbar-left {
+    float: left;
+}
+
+.navbar-right {
+    float: right;
+}
+
+
+.dropdown-full {
+    position: absolute;
+    display: none;
+    width: 100%;
+    min-height: 200px;
+    background-image: linear-gradient(to top, rgb(148, 194, 209), rgb(175, 182, 177));
+    box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+    z-index: 999;
+    margin-left: -225px;
+    border: 1px solid rgb(64, 64, 64);
+}
+
+.dropdown-full ul {
+    list-style-type: none;
+    padding:0;
+    margin: 0;
+}
+
+.dropdown-full a {
+    display: block;
+    color: black;
+    margin: 10px;
+    text-align: left;
+}
+
+.dropdown-full a:hover, .media-tab:hover > a {
+    color: white;
+    background-image: radial-gradient(rgb(26, 255, 255, .1),rgb(26, 255, 255, .4),rgb(26, 255, 255, .8));
+}
+
+.media-tab:hover .dropdown-full {
+    display: block;
+}
+
+.search-bar {
+    border-radius: 5px;
+    margin: 8px 0 8px 30px;
+    padding: 5px;
+    padding-left: 30px;
+    color: black;
+    width: 120px;
+    border: 1px solid black;
+    background-image: url('../images/Search-01.jpg');
+    background-size: 27px 27px;
+    background-position: 0 0;
+    background-repeat: no-repeat;
+    transition: width .5s ease-out;
+    opacity: .9;
+}
+
+.search-bar:focus {
+    width: 240px;
+}
+
+
+/* FLEX LAYOUT */
+.flex-container{
+    display: flex;
+}
+
+
+/* PRODUCT PAGE TOPBAR */
+
+#productTopbar {
+    width: 100%;
+    height: 300px;
+    margin-bottom: 20px;
+    border-bottom: 2px solid white;
+}
+
+/*PRODUCT SHOWCASE*/
+
+#productShowcaseImage {
+    width: 360px;
+    height: 360px;
+    margin-left: 20px;
+    background-color: rgb(238, 238, 238);
+    border-radius: 5px;
+    box-shadow: 0 4px 8px 0 rgba(255, 255, 255, 0.4), 0 6px 20px 0 rgba(255, 255, 255, 0.39);
+}
+
+#productShowcase {
+    width: 350px;
+    height: 350px;
+    padding: 5px;
+    object-fit: contain;
+}
+
+#productShowcaseInfo {
+    position: relative;
+    height: 360px;
+    width: 700px;
+    margin: 0 10px;
+    border-radius: 5px;
+    background-color: rgb(238, 238, 238);
+    box-shadow: 0 4px 8px 0 rgba(255, 255, 255, 0.4), 0 6px 20px 0 rgba(255, 255, 255, 0.39);
+}
+
+#productName2 {
+    display: block;
+    color: black;
+    font-weight: 800;
+    margin: 5px 2.5px;
+    text-align: center;
+    font-size: 30px;
+    text-shadow: 1px 1px 4px red;
+    overflow: hidden;
+    height: 70px;
+}
+
+#productSteamlink {
+    color: black;
+    font-size: 22px;
+    display: block;
+    padding: 3px;
+    margin: 10px;
+    float: right;
+    font-weight: 700;
+}
+
+#productSteamlink:hover {
+    color: rgb(0, 29, 116);
+}
+
+#gameName {
+    display: inline-block;
+    font-size: 22px;
+    padding: 3px;
+    margin: 10px;
+    font-weight: 600;
+}
+
+.productButton {
+    position: absolute;
+    bottom: 0;
+    display: block;
+    font-size: 25px;
+    padding: 20px;
+    margin: 10px;
+    border-radius: 5px;
+    background-color: rgb(46, 184, 46);
+    box-shadow: 1px 1px 4px black;
+}
+
+.productButton:hover {
+    background-color: rgb(34, 133, 34);
+}
+
+#productPrice2 {
+    display: block;
+    margin: 10px;
+    padding: 8px 0;
+    font-size: 25px;
+    text-align: center;
+    font-weight: 1000;
+    color: rgb(40, 147, 173);
+    text-shadow: 1px 1px 2px black;
+    border-top: 2px solid black;
+    border-bottom: 2px solid black;
+    background-image: radial-gradient(rgb(57, 230, 0,.2),rgb(57, 230, 0, .5),rgb(57, 230, 0,.9));
+    border-radius: 3px;
+}

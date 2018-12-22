@@ -1,0 +1,134 @@
+<!DOCTYPE <!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <title>Market-Place</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link href="https://fonts.googleapis.com/css?family=Exo+2" rel="stylesheet">
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.6.0/css/all.css" integrity="sha384-aOkxzJ5uQz7WBObEZcHvV5JvRW3TUc2rNPA7pe3AwnsUohiw1Vj2Rgx2KSOkF5+h" crossorigin="anonymous">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.6-rc.0/css/select2.min.css" rel="stylesheet" />
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.6-rc.0/js/select2.min.js"></script>
+    <link rel="stylesheet" type="text/css" media="screen" href="css/stylesheet-market.css" />
+
+
+    <script>
+
+        $(document).ready(function(){
+            $('.listGame').select2({
+                placeholder: 'Select an option'
+            });
+
+            $('.listGame').addClass('listGameStyle');
+        });
+    </script>
+
+</head>
+
+
+<body>
+    
+    <ul class="navbar">
+        <li class="navbar-left"><a href="#" style="margin-left: 30px;">HOME</a></li>
+        <li class="navbar-left"><a href="#">STREAMING</a></li>
+
+        <li class="navbar-left media-tab">
+            <a href="#">MEDIA</a>
+            <div class="dropdown-full">
+                <ul>
+                    <li><a href="#">MEMES</a></li>
+                    <li><a href="#">VIDEOS</a></li>
+                    <li><a href="#">COSPLAY</a></li>
+                </ul>
+            </div>
+        </li>
+
+        <li class="navbar-left"><a href="#">MARKET-PLACE</a></li>
+
+        <li class="navbar-left">
+            <form>
+                <input type="text" name="search" placeholder="Search.." class="search-bar">
+            </form>
+        </li>
+
+        <li class="navbar-right"><a href="#" style="margin-right:30px;">CART</a></li>
+        <li class="navbar-right"><a href="#">HELP</a></li>
+        <li class="navbar-right"><a href="#">SOCIAL</a></li>
+    </ul>
+
+
+    <div class="flex-container">
+
+        <div class="flex-item" id="marketLeft">
+
+            <p class="sortMarketHeader">Sort by Price</p>
+
+            <label class="button-container">Price - Asc.
+                <input type="radio" name="radio">
+                <span class="checkmark"></span>
+            </label>
+            <label class="button-container">Price - Desc.
+                <input type="radio" name="radio">
+                <span class="checkmark"></span>
+            </label>
+
+            <p class="sortMarketHeader">Sort by Game</p>
+            <select class="listGame" name="listGame">
+                <option value="all">All Games</option>
+                <option value="csgo">Counter Strike Global Offensive</option>
+                <option value="pubg">Playerunkowns Battleground</option>
+                <option value="dota2">DOTA 2</option>
+            </select>
+
+        </div>
+
+        <div class="flex-item" id="marketRight">
+
+            <div class="productContainer">
+                <img src="images/ak47a.png" alt="Error 404" id="productDisplay">
+                <a href="#" id="productName">AK 47 DHASU PINK VALI (Factory New)</a>
+                <p id="productPrice">3,000 RINS</p>
+                <p id="productGame">CS GO</p>
+            </div>
+
+            <div class="productContainer">
+                <img src="images/ak47b.png" alt="Error 404" id="productDisplay">
+                <a href="#" id="productName">AK 47 ASIIMOV (Factory New)</a>
+                <p id="productPrice">10,000 RINS</p>
+                <p id="productGame">CS GO</p>
+            </div>
+
+            <div class="productContainer">
+                <img src="images/awp.png" alt="Error 404" id="productDisplay">
+                <a href="#" id="productName">AWP PURPLE JHAT (Factory New)</a>
+                <p id="productPrice">8,000 RINS</p>
+                <p id="productGame">CS GO</p>
+            </div>
+    
+            <div class="productContainer">
+                <img src="images/p2000.png" alt="Error 404" id="productDisplay">
+                <a href="#" id="productName">P2000 ORANGE MONSTER VALI (Factory New)</a>
+                <p id="productPrice">200 RINS</p>
+                <p id="productGame">CS GO</p>
+            </div>
+        
+            <div class="productContainer">
+                <img src="images/knife.png" alt="Error 404" id="productDisplay">
+                <a href="#" id="productName">COLORFUL CHAKKU TEZ DHAR VALA (Factory New)</a>
+                <p id="productPrice">99,000 RINS</p>
+                <p id="productGame">CS GO</p>
+            </div>
+            
+            <div class="productContainer">
+                <img src="images/download.png" alt="Error 404" id="productDisplay">
+                <a href="#" id="productName">jhatu CRATE</a>
+                <p id="productPrice">FREE</p>
+                <p id="productGame">UNKNOWN</p>
+            </div>
+        </div>
+
+    </div>
+
+    
+</body>
+</html>
