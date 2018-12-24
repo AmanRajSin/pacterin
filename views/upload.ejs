@@ -15,7 +15,6 @@
             var	myItems= [];
 
             var d = new Date();
-            var date = new Date("1 Jan 1970");
             const username = '<%= (username) ? username : `` %>';
             if(!username) window.location.replace('/login');
             $(document).ready(function(){
@@ -164,6 +163,7 @@
                       function display(){
                         $(".content-container").html('');
                         $.each(data, function(index,val){
+			    var date = new Date(data[index].time);
                             data[index].upvote = JSON.parse(data[index].upvote);
                             data[index].downvote = JSON.parse(data[index].downvote);
                             var postid = data[index].time + data[index].username;
@@ -180,7 +180,7 @@
                                 timer.toString();
                                 timer+='h';
                             }else{
-                                timer = d.getDate().toString() + " " + months[d.getMonth()] + " " + d.getFullYear().toString() ;
+                                timer = date.getDate().toString() + " " + months[date.getMonth()] + " " + date.getFullYear().toString() ;
                             }
 
 
@@ -219,7 +219,7 @@
                                          if($('#' + section_check).prop("checked") == true){
                                              $('#mediaMiddle').prepend(`<div class="content-container"><p class="content-section-time">` + data[index].section.substring(1,data[index].section.length) + ` - ` + timer + `</p>
                                                   <h3 class="content-title" id=title-` + postid + `>` + data[index].title + `</h3>
-                                                  <video controls class="content-post"> <source src="./public/upload-videos/` + data[index].time + data[index].username + data[index].ext + `"> </video> >
+                                                  <video controls class="content-post"> <source src="upload-videos/` + data[index].time + data[index].username + data[index].ext + `"> </video> >
                                                   <a href="#">`+ tag1[0] +`</a> <a href="#">`+ tag1[1] +`</a> <a href="#">`+ tag1[2] +`</a> <br>
                                                   <p id="`+data[index].time + data[index].username+`">` + (data[index].upvote_count - data[index].downvote_count) + `</p><br>
                                                   <i class="fas fa-arrow-circle-up" id="up-`+data[index].time + data[index].username+`"></i> <i class="fas fa-arrow-circle-down" id="down-`+data[index].time + data[index].username+`"></i> <i id=comment-`+ data[index].time + data[index].username +` class="far fa-comment-alt"></i>
