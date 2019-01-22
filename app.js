@@ -12,6 +12,8 @@ const logoutControl = require('./controllers/logoutControl')
 const serverControl = require('./controllers/serverControl')
 const upload = require('./controllers/upload')
 const uploadedContent = require('./controllers/uploadedContent')
+const market =require('./controllers/market')
+const streamAuth = require('./controllers/streamAuth')
 
 var app = express();
 
@@ -29,3 +31,5 @@ profChange(app);
 logoutControl(app);
 upload(app);
 uploadedContent(app);
+market(app);
+streamAuth(app);
