@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <script src= "https://cdnjs.cloudflare.com/ajax/libs/shaka-player/2.4.5/shaka-player.compiled.js"></script>
+        <script>
+            function initApp() {
+                shaka.polyfill.installAll();
+                var video = document.getElementById('liveplayer');
+
+                if (shaka.Player.isBrowserSupported()) {
+                    var manifestUri = 'http://192.168.0.109:80/dash/spike.mpd';
+
+                    var player = new shaka.Player(video);
+                    window.player = player;
+                    
+
+                    player.addEventListener('error', onErrorEvent);
+                    player.load(manifestUri).catch(onError);
+                    video.play();
+                }
+                else if(video.canPlayType('application/x-mpegURL; codecs="avc1.42E01E"')!= ''){
+                    video.setAttribute('src','http://192.168.0.109:80/hls/spike.m3u8');
+                }
+                else alert('Browser not Supported');
+            }
+
+            function onErrorEvent(event) { onError(event.detail);}
+            function onError(error) { console.error('Error code', error.code, 'object', error);}
+            document.addEventListener('DOMContentLoaded', initApp);
+        </script>
+        <style>
+            ::-webkit-media-controls-timeline {display:none;}
+        </style>
+    </head>
+    <body>
+        <video id="liveplayer" height="480" width="" autoplay controls></video>
+    </body>
+</html>

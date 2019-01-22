@@ -10,7 +10,7 @@ module.exports = function(app){
             if (err){
                 console.log(err);
             }else if (req.params.id===req.session.username){
-                res.render('cred-edit',{person : result[0]});
+                res.render('cred_edit',{person : result[0]});
             }else{
                 res.redirect('/profile/'+req.params.id);
             }

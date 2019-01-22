@@ -18,8 +18,9 @@ module.exports = function(app){
     app.get('/messenger/:id', function(req,res) { res.render('./messenger_personal', {to:req.params.id, from:req.session.username});});
     app.get('/upload', function(req, res) { res.render('./upload',{username:req.session.username});});
     app.get('/mediaPost/:postid', function(req, res) {res.render('./mediaPost',{username: req.session.username, postid: req.params.postid});});
+    app.get('/live', function(req, res) {res.render('./live_stream.ejs');});
     
     // Listen to Port
-    socketControl(app.listen(process.env.PORT||2000));
-    console.log('Port 2000 Up!');
+    socketControl(app.listen(process.env.PORT||80));
+    console.log('Port 80 Up!');
 }
